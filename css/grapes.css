@@ -1,0 +1,18 @@
+.navbar-nav a{
+    display: none;
+    text-decoration: none;
+    padding: 5px 20px;
+
+}
+
+
+
+#main > section {
+    display: none;
+}
+
+#loggedInUser{
+    color: #ff5e3a;
+
+ }
+
