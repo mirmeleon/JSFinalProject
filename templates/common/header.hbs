@@ -26,12 +26,16 @@
             {{/if}}
 
             {{#if loggedIn}}
-            <li class="nav-item">
-               <span id="loggedInUser" class="menu-item">Hello, {{username}}</span>
-            </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#/logout" id="linkLogout">Logout</a>
+
+                <li class="dropdown nav-item">
+                    <a href=""  class="dropdown-toggle nav-link" data-toggle="dropdown">Hello, {{username}}
+                        <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Profile</a></li>
+                        <li><a  href="#/logout" id="linkLogout">Logout</a></li>
+                    </ul>
                 </li>
+
             {{/if}}
 
         </ul>
