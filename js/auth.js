@@ -8,17 +8,26 @@ let auth = (() => {
         localStorage.setItem('username', data.username);
         localStorage.setItem('id', data._id);
         localStorage.setItem('authtoken', data._kmd.authtoken);
+
     }
 
     function login(username, password) {
 
-        return remote.post('user', 'login', {username, password}, 'basic');
+        let userData = {
+            username,
+            password
+        };
 
+        return remote.post('user', 'login', userData, 'basic');
 
     }
 
     function register(username, password) {
-        return remote.post('user', '', {username, password}, 'basic');
+        let userData = {
+            username,
+            password
+        };
+        return remote.post('user', '', userData, 'basic');
 
     }
 
