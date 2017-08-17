@@ -14,6 +14,91 @@
 
 #loggedInUser{
     color: #ff5e3a;
-    //TODO: This ID alredy missing in DOM elements.Dont work!!!.Location is on  Hello, username tag's
+    // TODO: This ID alredy missing in DOM elements.Dont work!!!.Location is on  Hello, username tag's
  }
+#ordersHeader{
+    font-size: xx-large;
+    padding-bottom: 5%;
+}
+#orderIcon{
+    font-size:48px;
+    color:black
+}
+.order{
 
+    margin: 5px;
+}
+
+#ordersCeckBox{
+
+    padding: 30px;
+}
+.radio-inline{
+    padding: 10px;
+}
+#ordersContent{
+    border: 5px;
+    padding: 0px 50px 50px 50px;
+
+}
+.ordersPage{
+    background-image: url("http://bscit.vidyalankar.org/wp-content/uploads/BSc-IT-Hero-Image.png");
+}
+.list-group-item-focus{
+    background-color: #f05f40;
+}
+
+.pagenation{
+    padding-left: 35%;
+    padding-top: 1%;
+    margin: 10px;
+    border: inherit;
+}
+
+/* Loader */
+  #loader {
+
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      z-index: 1;
+      width: 150px;
+      height: 150px;
+      margin: -75px 0 0 -75px;
+      border: 16px solid #f3f3f3;
+      border-radius: 50%;
+      border-top: 16px solid #f05f40;
+      width: 120px;
+      height: 120px;
+      -webkit-animation: spin 2s linear infinite;
+      animation: spin 2s linear infinite;
+  }
+
+@-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Add animation to "page content" */
+.animate-bottom {
+    position: relative;
+    -webkit-animation-name: animatebottom;
+    -webkit-animation-duration: 1s;
+    animation-name: animatebottom;
+    animation-duration: 1s
+}
+
+@-webkit-keyframes animatebottom {
+    from { bottom:-100px; opacity:0 }
+    to { bottom:0px; opacity:1 }
+}
+
+@keyframes animatebottom {
+    from{ bottom:-100px; opacity:0 }
+    to{ bottom:0; opacity:1 }
+}

@@ -8,7 +8,8 @@ let auth = (() => {
         localStorage.setItem('username', data.username);
         localStorage.setItem('id', data._id);
         localStorage.setItem('authtoken', data._kmd.authtoken);
-
+        //NEW Save role in session !!!
+        localStorage.setItem('role',data.role)
     }
 
     function login(username, password) {

@@ -1,0 +1,19 @@
+
+<li id="{{_id}}" class="list-group-item text-center text-uppercase order animated flipInX"><div class="row">
+    <div class="col-sm-2 ">{{name}}</div>
+    <div class="col-sm-2"><i id="orderIcon" class="{{appIcon}}"></i></div>
+    <div class="col-sm-2">{{status}}</div>
+    <div class="row col-sm-6">
+
+        <button class="btn btn-success col-sm-4">Details</button>
+    {{#if isAdmin}}
+        <button class="btn btn-info col-sm-8">Enter in production</button>
+        {{else}}
+        <div class="col-sm-1"><i id="orderIcon" class="fa fa-group"></i></div>
+        <div class=".teamName col-sm-6" >{{teamName}}</div>
+
+    {{/if}}
+
+    </div>
+
+</div></li>

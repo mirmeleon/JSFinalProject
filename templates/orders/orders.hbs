@@ -1,9 +1,28 @@
 {{>header}}
 
-<div>
+<div class="ordersPage">
     <br />
     <br /><br />
 
-<h3 style="text-align: center; color: #1e7e34"> Todo!</h3>
+    <div id="ordersHeader"><header class="text-center">All Orders</header></div>
+
+
+    <div id="ordersContent" class="container">
+        <div class="row">
+
+            {{>orderByForm}}
+
+        </div>
+
+
+    <ul class="list-group" id="ordersList">
+
+
+    </ul>
+
+      {{> pagenation}}
+
+    </div>
+
 </div>
 {{>footer}}
