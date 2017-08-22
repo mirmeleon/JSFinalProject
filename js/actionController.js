@@ -306,5 +306,24 @@ let actionController = (()=>{
             ctx.redirect('#/home');
         });
     }
-    return {renderHome,renderServices,renredLogin,renderRegister,actionLogin,actionRegister,actionLogout,renderNewOrder,renderOrders,renderOrderDetails}
+
+    function actionNewOrder(ctx) {
+        console.log(ctx);
+        let name = ctx.params.nameOfApp;
+        let appType = ctx.params.appType;
+        let comment = ctx.params.comment;
+        let deadline = ctx.params.deadline;
+        let designElements = ctx.params.designElements;
+        let functionality = ctx.params.functionality;
+        let pageCount = ctx.params.pageCount;
+        let publishedDate = util.formatDate(new Date());
+        appService.createNewOrder(name, appType, comment, deadline, designElements, functionality, pageCount, publishedDate)
+            .then(function () {
+                // TODO: Show info message for success create New Order
+                ctx.redirect('#/orders');
+                //$('#newOrderForm').reset();
+            })//TODO: Show Error message for unsuccessful create new order
+
+    }
+    return {renderHome,renderServices,renredLogin,renderRegister,actionLogin,actionRegister,actionLogout,renderNewOrder,actionNewOrder,renderOrders,renderOrderDetails}
 })();

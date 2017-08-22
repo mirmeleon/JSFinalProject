@@ -21,6 +21,8 @@ $(() => {
         this.get('#/logout', actionController.actionLogout);
         //NEW ORDER
         this.get('#/neworder', actionController.renderNewOrder);
+        //New Order Post
+        this.post('#/neworder', actionController.actionNewOrder);
         //ORDERS
         this.get('#/orders',actionController.renderOrders)
         //Order Details
