@@ -16,6 +16,9 @@
     color: #ff5e3a;
     // TODO: This ID alredy missing in DOM elements.Dont work!!!.Location is on  Hello, username tag's
  }
+.new-order{
+    position: relative;
+}
 #ordersHeader{
     font-size: xx-large;
     padding-bottom: 5%;

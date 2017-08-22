@@ -32,4 +32,4 @@ let util = (()=>{
 
     return {formatDate,calcTime}
 
-})()
+})();

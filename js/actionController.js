@@ -33,13 +33,25 @@ let actionController = (()=>{
             this.partial('./templates/login/login.hbs');
         });
     }
+    //------------------RENDER NEW ORDER-----------------------------
+    function renderNewOrder(ctx) {
+        ctx.loggedIn = localStorage.getItem('authtoken') !== null;
+        ctx.username = localStorage.getItem('username');
+        ctx.loadPartials({
+            header:'./templates/common/header.hbs',
+            footer:'./templates/common/footer.hbs',
+            newOrderForm: './templates/orders/newOrderForm.hbs'
+        }).then(function(){
+            this.partial('./templates/orders/newOrderPage.hbs');
+        });
+    }
     function renderOrders(ctx) {
         ctx.loggedIn = localStorage.getItem('authtoken') !== null;
         ctx.username = localStorage.getItem('username');
         //Get role from localStorage
         ctx.isAdmin = localStorage.getItem('role') === 'Admin';
         $(document).ajaxStart(showLoading);
-        $(document).ajaxStop(hideLoading)
+        $(document).ajaxStop(hideLoading);
         ctx.loadPartials({
             header:'./templates/common/header.hbs',
             pagenation:'templates/common/pagenation.hbs',
@@ -49,7 +61,7 @@ let actionController = (()=>{
 
         }).then(function(){
             this.partial('./templates/orders/orders.hbs').then(function () {
-                $('#orderCriteria').change(showOrdersList)
+                $('#orderCriteria').change(showOrdersList);
                 $('#ordersCeckBox').change(showOrdersList)
 
             });
@@ -61,7 +73,7 @@ let actionController = (()=>{
         }
         function showLoading() {
             if($('#ordersList').find('#loader')){
-                let loader = $('<div id="loader"></div>')
+                let loader = $('<div id="loader"></div>');
                 $('#ordersList').append(loader)
             }
 
@@ -70,22 +82,22 @@ let actionController = (()=>{
             let orderByCriteria = $('#orderCriteria').val();
 
             let typeCriteria= [];
-            $('.page-item').addClass('disabled')
+            $('.page-item').addClass('disabled');
             let typesToView = $('#ordersCeckBox input').each((i,e) => {if($(e).is(':checked')===true){typeCriteria.push($(e).val())}})
             function getAppIcon(type) {
                 switch(type){
                     case'Mobile':
-                        return 'fa fa-tablet'
+                        return 'fa fa-tablet';
                     case'Desktop':
-                        return 'fa fa-desktop'
+                        return 'fa fa-desktop';
                     case'Web':
-                        return 'fa fa-code'
+                        return 'fa fa-code';
                     case 'Hybrid':
                         return 'fa fa-gears'
                 }
 
             }
-            $('#ordersList').text('')
+            $('#ordersList').text('');
 
 
             remote.get('appdata','orders','Kinvey')
@@ -101,7 +113,7 @@ let actionController = (()=>{
                             })
                         }
                     }
-                    selectType()
+                    selectType();
                     function orderOrdersList() {
                         if(orderByCriteria === 'DeadLine'){
                             ordersToView.sort(function (a,b) {
@@ -124,15 +136,15 @@ let actionController = (()=>{
                             })
                         }
                     }
-                    orderOrdersList()
+                    orderOrdersList();
                     let currentPage = 1;
                     let pageCount = 1;
-                    $('#pagenationNext').unbind()
-                    $('#pagenationPrevious').unbind()
-                    $('#pagenationNext').click(nextOrders)
-                    $('#pagenationPrevious').click(priviousOrders)
+                    $('#pagenationNext').unbind();
+                    $('#pagenationPrevious').unbind();
+                    $('#pagenationNext').click(nextOrders);
+                    $('#pagenationPrevious').click(priviousOrders);
                     if(ordersToView.length > 5) {
-                        pageCount = Math.ceil(ordersToView.length / 5)
+                        pageCount = Math.ceil(ordersToView.length / 5);
 
                         pageButtonOn();
 
@@ -140,33 +152,33 @@ let actionController = (()=>{
                     function pageButtonOn() {
 
                         if(currentPage===1){
-                            $('#pagenationNext').parent().removeClass('disabled')
+                            $('#pagenationNext').parent().removeClass('disabled');
                             $('#pagenationPrevious').parent().addClass('disabled')
                         }
                         else if(currentPage === pageCount){
-                            $('#pagenationNext').parent().addClass('disabled')
+                            $('#pagenationNext').parent().addClass('disabled');
                             $('#pagenationPrevious').parent().removeClass('disabled')
                         }
                         else{
-                            $('#pagenationNext').parent().removeClass('disabled')
+                            $('#pagenationNext').parent().removeClass('disabled');
                             $('#pagenationPrevious').parent().removeClass('disabled')
                         }
                     }
                     function nextOrders() {
                         event.preventDefault();
-                        $('#ordersList').text('')
+                        $('#ordersList').text('');
                         currentPage++;
-                        console.log(ordersToView)
-                        showList(getListPart(ordersToView,currentPage))
+                        console.log(ordersToView);
+                        showList(getListPart(ordersToView,currentPage));
 
                         pageButtonOn();
                     }
                     function priviousOrders() {
                         event.preventDefault();
-                        $('#ordersList').text('')
-                        console.log(ordersToView)
+                        $('#ordersList').text('');
+                        console.log(ordersToView);
                         currentPage--;
-                        showList(getListPart(ordersToView,currentPage))
+                        showList(getListPart(ordersToView,currentPage));
                         pageButtonOn();
 
                     }
@@ -180,7 +192,7 @@ let actionController = (()=>{
 
                                 $('#ordersList').text('')
                                 var template = Handlebars.compile(response[1]);
-                                Handlebars.registerPartial('order',response[0])
+                                Handlebars.registerPartial('order',response[0]);
                                 var html = template({orders:ordersList});
                                 $('#ordersList').append(html)
                                 $('.list-group  .list-group-item').mouseover(function () {
@@ -199,11 +211,11 @@ let actionController = (()=>{
                                         if(shown) {
                                             let currentOrder = data.filter(o=>o._id === orderId)[0];
                                             currentOrder.isAdmin = isAdmin;
-                                            console.log(currentOrder)
-                                            currentOrder.publishedDate = util.formatDate(currentOrder.publishedDate)
-                                            currentOrder.deadline = util.formatDate(currentOrder.deadline)
-                                            currentOrder.lastModifyDate = util.calcTime(currentOrder._kmd.lmt)
-                                            var orderDetaisHtml = orderDetailsTemplete(currentOrder)
+                                            console.log(currentOrder);
+                                            currentOrder.publishedDate = util.formatDate(currentOrder.publishedDate);
+                                            currentOrder.deadline = util.formatDate(currentOrder.deadline);
+                                            currentOrder.lastModifyDate = util.calcTime(currentOrder._kmd.lmt);
+                                            var orderDetaisHtml = orderDetailsTemplete(currentOrder);
                                             $(this).showBalloon({
                                                 html: true,
                                                 contents: orderDetaisHtml,
@@ -212,14 +224,14 @@ let actionController = (()=>{
 
                                             $(document).click(function () {
                                                 if(!$(event.target).is(btn)){
-                                                    $(btn).hideBalloon()
+                                                    $(btn).hideBalloon();
                                                     $(document).unbind('click');
                                                     shown = !shown
                                                 }
                                             })
 
                                         }else {
-                                            $(this).hideBalloon()
+                                            $(this).hideBalloon();
                                             $(document).unbind('click');
                                         }
                                         shown = !shown
@@ -244,7 +256,7 @@ let actionController = (()=>{
                         return currentPart;
                     }
                     function showOrderDetails() {
-                        let orderId = $(this).parent().parent().parent().attr('id')
+                        let orderId = $(this).parent().parent().parent().attr('id');
                         let btn = $(this);
 
                     }
@@ -294,5 +306,5 @@ let actionController = (()=>{
             ctx.redirect('#/home');
         });
     }
-    return {renderHome,renderServices,renredLogin,renderRegister,actionLogin,actionRegister,actionLogout,renderOrders,renderOrderDetails}
-})()
+    return {renderHome,renderServices,renredLogin,renderRegister,actionLogin,actionRegister,actionLogout,renderNewOrder,renderOrders,renderOrderDetails}
+})();
