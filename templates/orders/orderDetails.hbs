@@ -1,0 +1,40 @@
+<div class="orderDetails">
+<div class="panel panel-danger alert-success">
+    <div class="orderDetailsHeader  ">
+    <div class="panel-heading">
+        <h4 class="text-center">
+            Order:</h4>
+    </div>
+    <div class="panel-body text-center">
+        <p class="lead">
+            <strong>{{name}}</strong></p>
+    </div>
+    </div>
+    <ul class="list-group list-group-flush text-center">
+        <table style="overflow-x:auto;" class="orderDetailsTable">
+            <tr><td> <li class="list-group-item"><i class="icon-ok text-danger"></i>Status</li></td><td> <li class="list-group-item"><i class="icon-ok text-danger"></i>{{status}}</li></td></tr>
+            <tr><td><li class="list-group-item"><i class="icon-ok text-danger"></i>Application type</li></td><td><li class="list-group-item"><i class="icon-ok text-danger"></i>{{appType}}</li></td></tr>
+            <tr><td><li class="list-group-item"><i class="icon-ok text-danger"></i>Published date</li></td><td><li class="list-group-item"><i class="icon-ok text-danger"></i>{{publishedDate}}</li></td></tr>
+            <tr><td> <li class="list-group-item"><i class="icon-ok text-danger"></i>Deadline</li></td><td> <li class="list-group-item"><i class="icon-ok text-danger"></i>{{deadline}}</li></td></tr>
+            <tr><td><li class="list-group-item"><i class="icon-ok text-danger"></i>Functionality</li></td><td><li class="list-group-item"><i class="icon-ok text-danger"></i>{{#if functionality}}{{functionality}}{{else}}<i class="fa fa-minus"></i>{{/if}}</li></td></tr>
+            <tr><td><li class="list-group-item"><i class="icon-ok text-danger"></i>Comment</li></td><td><li class="list-group-item"><i class="icon-ok text-danger"></i>{{#if comment}}{{comment}}{{else}}<i class="fa fa-minus"></i>{{/if}}</li></td></tr>
+            <tr><td><li class="list-group-item"><i class="icon-ok text-danger"></i>Disgn elements</li></td><td><li class="list-group-item"><i class="icon-ok text-danger"></i>{{#if designElements}}{{designElements}}{{else}}<i class="fa fa-minus"></i>{{/if}}</li></td></tr>
+            <tr><td><li class="list-group-item"><i class="icon-ok text-danger"></i>Page count</li></td><td><li class="list-group-item"><i class="icon-ok text-danger"></i>{{#if pageCount}}{{pageCount}}{{else}}<i class="fa fa-minus"></i>{{/if}}</li></td></tr>
+        </table>
+    </ul>
+    {{#if isAdmin}}
+    <br>
+    <i>edited {{lastModifyDate}} ago</i>
+    <br>
+    <br>
+        <div class="panel-footer">
+            <a class="btn btn-lg btn-block btn-success" href="http://www.jquery2dotnet.com">Edit</a>
+        </div>
+    {{else}}
+        <br>
+        <br>
+        <i class="fa fa-info">    Your order can't be edites as it's entered in development</i>
+    {{/if}}
+
+</div>
+</div>

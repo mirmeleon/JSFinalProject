@@ -175,8 +175,9 @@ let actionController = (()=>{
 
 
 
-                        Promise.all([$.get('templates/orders/order.hbs'),$.get("templates/orders/listOrders.hbs")])
+                        Promise.all([$.get('templates/orders/order.hbs'),$.get("templates/orders/listOrders.hbs"),$.get("templates/orders/orderDetails.hbs")])
                             .then(function (response) {
+
                                 $('#ordersList').text('')
                                 var template = Handlebars.compile(response[1]);
                                 Handlebars.registerPartial('order',response[0])
@@ -188,6 +189,42 @@ let actionController = (()=>{
                                 $('.list-group  .list-group-item').mouseout(function () {
                                     $(this).css('background-color','#FFFFFF')
                                 })
+                                let isAdmin = localStorage.getItem('role') === 'Admin';
+                                var orderDetailsTemplete = Handlebars.compile(response[2]);
+                                    var shown = true;
+                                    $('.btnDetails').on("click", function() {
+
+                                        let btn = this;
+                                        let orderId = $(btn).parent().parent().parent().attr('id');
+                                        if(shown) {
+                                            let currentOrder = data.filter(o=>o._id === orderId)[0];
+                                            currentOrder.isAdmin = isAdmin;
+                                            console.log(currentOrder)
+                                            currentOrder.publishedDate = util.formatDate(currentOrder.publishedDate)
+                                            currentOrder.deadline = util.formatDate(currentOrder.deadline)
+                                            currentOrder.lastModifyDate = util.calcTime(currentOrder._kmd.lmt)
+                                            var orderDetaisHtml = orderDetailsTemplete(currentOrder)
+                                            $(this).showBalloon({
+                                                html: true,
+                                                contents: orderDetaisHtml,
+                                                position:null,showDuration: 500, hideDuration: 500
+                                            });
+
+                                            $(document).click(function () {
+                                                if(!$(event.target).is(btn)){
+                                                    $(btn).hideBalloon()
+                                                    $(document).unbind('click');
+                                                    shown = !shown
+                                                }
+                                            })
+
+                                        }else {
+                                            $(this).hideBalloon()
+                                            $(document).unbind('click');
+                                        }
+                                        shown = !shown
+                                    }).showBalloon({});
+
                             })
                     }
 
@@ -206,11 +243,20 @@ let actionController = (()=>{
                         }
                         return currentPart;
                     }
+                    function showOrderDetails() {
+                        let orderId = $(this).parent().parent().parent().attr('id')
+                        let btn = $(this);
 
+                    }
 
 
                 })
         }
+    }
+    function renderOrderDetails(ctx) {
+       let orderId = ctx.params.id;
+       this.loadPartials()
+
     }
     function renderRegister(ctx) {
         this.loadPartials({
@@ -248,6 +294,5 @@ let actionController = (()=>{
             ctx.redirect('#/home');
         });
     }
-
-    return {renderHome,renderServices,renredLogin,renderRegister,actionLogin,actionRegister,actionLogout,renderOrders}
+    return {renderHome,renderServices,renredLogin,renderRegister,actionLogin,actionRegister,actionLogout,renderOrders,renderOrderDetails}
 })()

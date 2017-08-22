@@ -5,7 +5,8 @@
     <div class="col-sm-2">{{status}}</div>
     <div class="row col-sm-6">
 
-        <button class="btn btn-success col-sm-4">Details</button>
+      <!--  <button class="btn btn-success col-sm-4" method="get" onclick="location.href='#/orders/details/{{_id}}'">Details</button> -->
+        <button class="btn btn-success col-sm-4 btnDetails">Details</button>
     {{#if isAdmin}}
         <button class="btn btn-info col-sm-8">Enter in production</button>
         {{else}}

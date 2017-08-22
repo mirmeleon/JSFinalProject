@@ -47,7 +47,24 @@
 .list-group-item-focus{
     background-color: #f05f40;
 }
+.orderDetails{
+    text-align: right;
+    margin: 10px;
+    padding: 10px;
+    border: 10px;
 
+}
+.orderDetailsTable{
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+    border: 1px solid #ddd;
+}
+.orderDetailsHeader{
+    margin: 10px;
+    padding: 10px;
+    border: 10px;
+}
 .pagenation{
     padding-left: 35%;
     padding-top: 1%;
@@ -102,3 +119,7 @@
     from{ bottom:-100px; opacity:0 }
     to{ bottom:0; opacity:1 }
 }
+
+.lead { font-size: 33px;margin-bottom:0px; }
+
+
