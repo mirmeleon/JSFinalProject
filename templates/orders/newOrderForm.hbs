@@ -1,0 +1,58 @@
+<form id="newOrderForm" action="#/neworder" method="post" class="form-group">
+    <div class="group">
+        <label for="appType" class="label">App Type</label>
+        <select id="appType" name="appType" type="text" class="form-control dropdown-toggle">
+            <option>Web</option>
+            <option>Mobile</option>
+            <option>Desktop</option>
+            <option>Hybrid</option>
+        </select>
+    </div>
+
+    <div class="group">
+        <label for="nameOfApp" class="label">Name Of App</label>
+        <input id="nameOfApp" name="nameOfApp" type="text" class="form-control" data-type="text" maxlength="35">
+    </div>
+
+    <div class="group">
+        <label for="numberOfPage" class="label">Number Of Page</label>
+        <input id="numberOfPage" name="pageCount" type="number" class="form-control" data-type="number">
+    </div>
+
+    <fieldset class="form-group">
+        <legend>Do you have ready design?</legend>
+        <div class="form-check">
+            <label class="form-check-label">
+                <input type="radio" class="form-check-input" name="designElements" id="optionsRadios1" value="Yes" checked>
+                YES
+            </label>
+        </div>
+        <div class="form-check">
+            <label class="form-check-label">
+                <input type="radio" class="form-check-input" name="designElements" id="optionsRadios2" value="No">
+                NO
+            </label>
+        </div>
+    </fieldset>
+
+    <div class="group">
+        <label for="deadline" class="label">Enter your deadline(if you have)</label>
+        <input id="deadline" name="deadline" type="date" class="form-control" data-type="date">
+    </div>
+
+    <div class="form-group">
+        <label for="functionality">Describe desired functionality:</label>
+        <textarea class="form-control" id="functionality" name="functionality" rows="5" maxlength="100"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="comment">Leave your comment here</label>
+        <textarea class="form-control" id="comment" name="comment" rows="5" maxlength="100"></textarea>
+    </div>
+
+    <div class="group">
+        <input type="submit" id="buttonNewOrder" class="button" value="Register Order">
+    </div>
+    <div class="hr"></div>
+
+</form>
