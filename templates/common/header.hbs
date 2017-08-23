@@ -30,7 +30,7 @@
 
             {{#if loggedIn}}
 
-                <li class="dropdown nav-item">
+                <li class="dropdown nav-item profilLink">
                     <a href=""  class="dropdown-toggle nav-link" data-toggle="dropdown">Hello, {{username}}
                         <span class="caret"></span></a>
                     <ul class="dropdown-menu">
@@ -38,7 +38,8 @@
                         <li><a  href="#/logout" id="linkLogout">Logout</a></li>
                     </ul>
                 </li>
-
+                    {{else}}
+                <span class="profilLink"></span>
             {{/if}}
 
         </ul>

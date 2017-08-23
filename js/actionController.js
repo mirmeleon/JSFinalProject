@@ -310,7 +310,7 @@ let actionController = (()=>{
             let publishedDate = ctx.publishedDate;
             let data = {publishedDate:publishedDate,status:status,designElements:designElements,teamName:teamName,name:name,appType:appType,pageCount:pageCount,functionality:functionality,deadline:deadline,comment:comment}
             remote.update('appdata',`orders/${orderId}`,data,auth).then(function (data) {
-                alert('Editing succesful');
+                infoBoxController.showInfo('Order edited successful')
                 ctx.redirect('#/orders')
             }).catch(function (reason) {
                 console.log(reason)
@@ -345,6 +345,7 @@ let actionController = (()=>{
         auth.login(username, password)
             .then(function(userInfo){
                 auth.saveSession(userInfo);
+                infoBoxController.showInfo(`Wellcome ${username} you login successful`)
                 ctx.redirect('#/home');
             })
     }
@@ -355,6 +356,7 @@ let actionController = (()=>{
         auth.register(username, pass)
             .then(function(userInfo){
                 auth.saveSession(userInfo);
+                infoBoxController.showInfo('Register successful')
                 ctx.redirect('#/home');
 
             })
@@ -362,6 +364,7 @@ let actionController = (()=>{
     function actionLogout(ctx) {
         auth.logout().then(function(){
             localStorage.clear();
+            infoBoxController.showInfo('Bye bye')
             ctx.redirect('#/home');
         });
     }
@@ -378,7 +381,7 @@ let actionController = (()=>{
 
         appService.createNewOrder(name, appType, comment, deadline, designElements, functionality, pageCount, publishedDate)
             .then(function () {
-                // TODO: Show info message for success create New Order
+                infoBoxController.showInfo('Order create successful')
                 ctx.redirect('#/orders');
             })//TODO: Show Error message for unsuccessful create new order
     }
