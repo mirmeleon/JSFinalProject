@@ -316,14 +316,13 @@ let actionController = (()=>{
         let designElements = ctx.params.designElements;
         let functionality = ctx.params.functionality;
         let pageCount = ctx.params.pageCount;
-        let publishedDate = util.formatDate(new Date());
+        let publishedDate = new Date();
+
         appService.createNewOrder(name, appType, comment, deadline, designElements, functionality, pageCount, publishedDate)
             .then(function () {
                 // TODO: Show info message for success create New Order
                 ctx.redirect('#/orders');
-                //$('#newOrderForm').reset();
             })//TODO: Show Error message for unsuccessful create new order
-
     }
     return {renderHome,renderServices,renredLogin,renderRegister,actionLogin,actionRegister,actionLogout,renderNewOrder,actionNewOrder,renderOrders,renderOrderDetails}
 })();
