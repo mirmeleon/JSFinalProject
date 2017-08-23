@@ -21,8 +21,8 @@ $(() => {
         this.get('#/logout', actionController.actionLogout);
         //ORDERS
         this.get('#/orders',actionController.renderOrders)
-        //Order Details
-        //this.get('#/orders/details/:id',actionController.renderOrderDetails)
+        //Order Edit
+        this.get('#/orders/edit/:id',actionController.renderOrderEdit)
     });
 
     app.run();

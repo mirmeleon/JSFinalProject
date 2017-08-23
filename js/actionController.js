@@ -195,11 +195,12 @@ let actionController = (()=>{
                                     $('.btnDetails').on("click", function() {
 
                                         let btn = this;
+                                        $(btn).attr('id','shown')
                                         let orderId = $(btn).parent().parent().parent().attr('id');
                                         if(shown) {
+                                            $($('.orderDetails').parent()).attr('class','')
                                             let currentOrder = data.filter(o=>o._id === orderId)[0];
                                             currentOrder.isAdmin = isAdmin;
-                                            console.log(currentOrder)
                                             currentOrder.publishedDate = util.formatDate(currentOrder.publishedDate)
                                             currentOrder.deadline = util.formatDate(currentOrder.deadline)
                                             currentOrder.lastModifyDate = util.calcTime(currentOrder._kmd.lmt)
@@ -212,15 +213,21 @@ let actionController = (()=>{
 
                                             $(document).click(function () {
                                                 if(!$(event.target).is(btn)){
+                                                    $($('.orderDetails').parent()).attr('class','animated zoomOutUp')
                                                     $(btn).hideBalloon()
+
                                                     $(document).unbind('click');
+                                                    $(btn).attr('id','')
                                                     shown = !shown
                                                 }
                                             })
 
                                         }else {
+                                            $($('.orderDetails').parent()).attr('class','animated zoomOutUp')
                                             $(this).hideBalloon()
+
                                             $(document).unbind('click');
+                                            $(btn).attr('id','')
                                         }
                                         shown = !shown
                                     }).showBalloon({});
@@ -253,9 +260,62 @@ let actionController = (()=>{
                 })
         }
     }
-    function renderOrderDetails(ctx) {
+    function renderOrderEdit(ctx) {
        let orderId = ctx.params.id;
-       this.loadPartials()
+       let balloon = $('.orderDetails').parent();
+       balloon.attr('class','animated jello')
+        setTimeout(()=>{balloon.attr('class','animated zoomOut')},1000)
+        setTimeout(()=>{balloon.remove()},3000)
+        $(document).unbind('click');
+       ctx.orderId = orderId;
+        ctx.loggedIn = localStorage.getItem('authtoken') !== null;
+        let auth = localStorage.getItem('authtoken');
+        ctx.username = localStorage.getItem('username');
+        let url = `orders/${orderId}`
+        remote.get('appdata',url,auth).then(function (data) {
+            ctx.id = data.id;
+            ctx.status = data.status;
+            ctx.teamName = data.teamName;
+            ctx.publishedDate = data.publishedDate;
+            ctx.designElements = data.designElements;
+            ctx.name = data.name;
+            ctx.comment = data.comment;
+            ctx.pageCount = data.pageCount;
+            ctx.functionality = data.functionality;
+            ctx.appType = data.appType;
+            ctx.deadline = util.formatDate(data.deadline);
+            ctx[ctx.appType] = 'selected'
+            ctx.loadPartials({
+                header:'./templates/common/header.hbs',
+                footer:'./templates/common/footer.hbs'
+            }).then(function(){
+                this.partial('./templates/orders/editOrder.hbs').then(function () {
+                    $('.editOrderBtn').click(editingOrder)
+                });
+
+            });
+        }).catch(function (reason) {
+            console.log(reason);
+        })
+        function editingOrder() {
+            let appType = $('#appType').val();
+            let pageCount = $('#pageCount').val();
+            let functionality = $('#functionality').val();
+            let deadline = $('#deadline').val();
+            let comment = $('#comment').text();
+            let status = ctx.status;
+            let designElements = ctx.designElements;
+            let teamName = ctx.teamName;
+            let name = ctx.name;
+            let publishedDate = ctx.publishedDate;
+            let data = {publishedDate:publishedDate,status:status,designElements:designElements,teamName:teamName,name:name,appType:appType,pageCount:pageCount,functionality:functionality,deadline:deadline,comment:comment}
+            remote.update('appdata',`orders/${orderId}`,data,auth).then(function (data) {
+                alert('Editing succesful');
+                ctx.redirect('#/orders')
+           }).catch(function (reason) {
+               console.log(reason)
+            })
+        }
 
     }
     function renderRegister(ctx) {
@@ -294,5 +354,14 @@ let actionController = (()=>{
             ctx.redirect('#/home');
         });
     }
-    return {renderHome,renderServices,renredLogin,renderRegister,actionLogin,actionRegister,actionLogout,renderOrders,renderOrderDetails}
+
+    return {renderHome,
+        renderServices,
+        renredLogin,
+        renderRegister,
+        actionLogin,
+        actionRegister,
+        actionLogout,
+        renderOrders,
+        renderOrderEdit}
 })()
