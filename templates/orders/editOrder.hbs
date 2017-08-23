@@ -1,46 +1,55 @@
 {{>header}}
 
-<section id="editOrders">
+<section id="editOrders" class="login">
     <div class="section-content">
         <h1 class="section-header">Editing order <span class="content-header wow fadeIn " data-wow-delay="0.2s" data-wow-duration="2s"> {{name}}</span></h1>
     </div>
-    <div class="contact-section">
+    <div class="login-wrap">
 
-            <form class="row">
-                <div class="col-md-5 col-sm-5 form-line">
-                    <div class="form-group">
-                        <label for="appType">App type</label>
-                        <select type="select"  class="form-control" id="appType" placeholder="App type">
+            <div class="login-html">
+                <div class="login-form">
+
+            <form class="row form-group ">
+                <div class="col-md-6 col-sm-6">
+                    <div class=group">
+                        <label class="label" for="appType">App type</label>
+                        <select type="select"  class="form-control dropdown-toggle" id="appType" placeholder="App type">
                             {{#if Desktop}}<option selected="selected">Desktop</option>  {{else}}<option>Desktop</option>    {{/if}}
                             {{#if Mobile}}<option selected="selected">Mobile</option>  {{else}} <option>Mobile</option>    {{/if}}
                             {{#if Web}}<option selected="selected">Web</option>  {{else}}<option>Web</option>  {{/if}}
                             {{#if Hybrid}}<option selected="selected">Hybrid</option>  {{else}}<option>Hybrid</option> {{/if}}
                         </select>
                     </div>
-                    <div class="form-group">
+                    <div class="group">
                         <label for="pageCount">Page count</label>
                         <input type="text" class="form-control" id="pageCount" value="{{pageCount}}">
                     </div>
-                    <div class="form-group">
+                    <div class="group">
                         <label for="functionality">Functionality</label>
                         <input type="text" class="form-control" id="functionality" value="{{functionality}}">
                     </div>
-                    <div class="form-group">
+                    <div class="group">
                         <label for="deadline">Deadline</label>
-                        <input type="text" class="form-control" id="deadline" value="{{deadline}}">
+                        <input id="deadline" name="deadline" type="date" class="form-control" value="{{deadline}}" data-type="date">
                     </div>
                 </div>
-                <div class="col-md-5 col-sm-5">
-                    <div class="form-group">
+                <div class="col-md-6 col-sm-6">
+                    <div class="group">
                         <label for ="comment"> Comments</label>
                         <textarea  class="form-control" id="comment">{{comment}}</textarea>
                     </div>
-                    <div>
-                        <button type="button" class="btn btn-default submit editOrderBtn" id="{{id}}"><i class="fa fa-paper-plane" aria-hidden="true"></i>  Save</button>
-                    </div>
+
 
                 </div>
+
+
+
             </form>
+                    <div class="group">
+                        <input type="submit" id="{{id}}" class="button editOrderBtn" value="Save">
+                    </div>
+                </div>
+            </div>
     </div>
 </section>
 

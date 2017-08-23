@@ -191,39 +191,46 @@ let actionController = (()=>{
                                 })
                                 let isAdmin = localStorage.getItem('role') === 'Admin';
                                 var orderDetailsTemplete = Handlebars.compile(response[2]);
-                                    var shown = true;
-                                    $('.btnDetails').on("click", function() {
+                                var shown = true;
+                                $('.btnDetails').on("click", function() {
 
-                                        let btn = this;
-                                        let orderId = $(btn).parent().parent().parent().attr('id');
-                                        if(shown) {
-                                            let currentOrder = data.filter(o=>o._id === orderId)[0];
-                                            currentOrder.isAdmin = isAdmin;
-                                            console.log(currentOrder)
-                                            currentOrder.publishedDate = util.formatDate(currentOrder.publishedDate)
-                                            currentOrder.deadline = util.formatDate(currentOrder.deadline)
-                                            currentOrder.lastModifyDate = util.calcTime(currentOrder._kmd.lmt)
-                                            var orderDetaisHtml = orderDetailsTemplete(currentOrder)
-                                            $(this).showBalloon({
-                                                html: true,
-                                                contents: orderDetaisHtml,
-                                                position:null,showDuration: 500, hideDuration: 500
-                                            });
+                                    let btn = this;
+                                    $(btn).attr('id','shown')
+                                    let orderId = $(btn).parent().parent().parent().attr('id');
+                                    if(shown) {
+                                        $($('.orderDetails').parent()).attr('class','')
+                                        let currentOrder = data.filter(o=>o._id === orderId)[0];
+                                        currentOrder.isAdmin = isAdmin;
+                                        currentOrder.publishedDate = util.formatDate(currentOrder.publishedDate)
+                                        currentOrder.deadline = util.formatDate(currentOrder.deadline)
+                                        currentOrder.lastModifyDate = util.calcTime(currentOrder._kmd.lmt)
+                                        var orderDetaisHtml = orderDetailsTemplete(currentOrder)
+                                        $(this).showBalloon({
+                                            html: true,
+                                            contents: orderDetaisHtml,
+                                            position:null,showDuration: 500, hideDuration: 500
+                                        });
 
-                                            $(document).click(function () {
-                                                if(!$(event.target).is(btn)){
-                                                    $(btn).hideBalloon()
-                                                    $(document).unbind('click');
-                                                    shown = !shown
-                                                }
-                                            })
+                                        $(document).click(function () {
+                                            if(!$(event.target).is(btn)){
+                                                $($('.orderDetails').parent()).attr('class','animated zoomOutUp')
+                                                $(btn).hideBalloon()
 
-                                        }else {
-                                            $(this).hideBalloon()
-                                            $(document).unbind('click');
-                                        }
-                                        shown = !shown
-                                    }).showBalloon({});
+                                                $(document).unbind('click');
+                                                $(btn).attr('id','')
+                                                shown = !shown
+                                            }
+                                        })
+
+                                    }else {
+                                        $($('.orderDetails').parent()).attr('class','animated zoomOutUp')
+                                        $(this).hideBalloon()
+
+                                        $(document).unbind('click');
+                                        $(btn).attr('id','')
+                                    }
+                                    shown = !shown
+                                }).showBalloon({});
 
                             })
                     }
@@ -253,10 +260,74 @@ let actionController = (()=>{
                 })
         }
     }
-    function renderOrderDetails(ctx) {
-       let orderId = ctx.params.id;
-       this.loadPartials()
+    function renderOrderEdit(ctx) {
+        let orderId = ctx.params.id;
+        let balloon = $('.orderDetails').parent();
+        balloon.attr('class','animated jello')
+        setTimeout(()=>{balloon.attr('class','animated zoomOut')},1000)
+        setTimeout(()=>{balloon.remove()},3000)
+        $(document).unbind('click');
+        ctx.orderId = orderId;
+        ctx.loggedIn = localStorage.getItem('authtoken') !== null;
+        let auth = localStorage.getItem('authtoken');
+        ctx.username = localStorage.getItem('username');
+        let url = `orders/${orderId}`
+        remote.get('appdata',url,auth).then(function (data) {
+            ctx.id = data.id;
+            ctx.status = data.status;
+            ctx.teamName = data.teamName;
+            ctx.publishedDate = data.publishedDate;
+            ctx.designElements = data.designElements;
+            ctx.name = data.name;
+            ctx.comment = data.comment;
+            ctx.pageCount = data.pageCount;
+            ctx.functionality = data.functionality;
+            ctx.appType = data.appType;
+            ctx.deadline = util.formatDate(data.deadline);
+            ctx[ctx.appType] = 'selected'
+            ctx.loadPartials({
+                header:'./templates/common/header.hbs',
+                footer:'./templates/common/footer.hbs'
+            }).then(function(){
+                this.partial('./templates/orders/editOrder.hbs').then(function () {
+                    $('.editOrderBtn').click(editingOrder)
+                });
 
+            });
+        }).catch(function (reason) {
+            console.log(reason);
+        })
+        function editingOrder() {
+            let appType = $('#appType').val();
+            let pageCount = $('#pageCount').val();
+            let functionality = $('#functionality').val();
+            let deadline = $('#deadline').val();
+            let comment = $('#comment').text();
+            let status = ctx.status;
+            let designElements = ctx.designElements;
+            let teamName = ctx.teamName;
+            let name = ctx.name;
+            let publishedDate = ctx.publishedDate;
+            let data = {publishedDate:publishedDate,status:status,designElements:designElements,teamName:teamName,name:name,appType:appType,pageCount:pageCount,functionality:functionality,deadline:deadline,comment:comment}
+            remote.update('appdata',`orders/${orderId}`,data,auth).then(function (data) {
+                alert('Editing succesful');
+                ctx.redirect('#/orders')
+            }).catch(function (reason) {
+                console.log(reason)
+            })
+        }
+
+    }
+    function renderNewOrder(ctx) {
+        ctx.loggedIn = localStorage.getItem('authtoken') !== null;
+        ctx.username = localStorage.getItem('username');
+        ctx.loadPartials({
+            header:'./templates/common/header.hbs',
+            footer:'./templates/common/footer.hbs',
+            newOrderForm: './templates/orders/newOrderForm.hbs'
+        }).then(function(){
+            this.partial('./templates/orders/newOrderPage.hbs');
+        });
     }
     function renderRegister(ctx) {
         this.loadPartials({
@@ -294,5 +365,31 @@ let actionController = (()=>{
             ctx.redirect('#/home');
         });
     }
-    return {renderHome,renderServices,renredLogin,renderRegister,actionLogin,actionRegister,actionLogout,renderOrders,renderOrderDetails}
+    function actionNewOrder(ctx) {
+        console.log(ctx);
+        let name = ctx.params.nameOfApp;
+        let appType = ctx.params.appType;
+        let comment = ctx.params.comment;
+        let deadline = ctx.params.deadline;
+        let designElements = ctx.params.designElements;
+        let functionality = ctx.params.functionality;
+        let pageCount = ctx.params.pageCount;
+        let publishedDate = new Date();
+
+        appService.createNewOrder(name, appType, comment, deadline, designElements, functionality, pageCount, publishedDate)
+            .then(function () {
+                // TODO: Show info message for success create New Order
+                ctx.redirect('#/orders');
+            })//TODO: Show Error message for unsuccessful create new order
+    }
+
+    return {renderHome,
+        renderServices,
+        renredLogin,
+        renderRegister,
+        actionLogin,
+        actionRegister,
+        actionLogout,
+        renderOrders,
+        renderOrderEdit,actionNewOrder,renderNewOrder}
 })()
