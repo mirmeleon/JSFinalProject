@@ -34,7 +34,8 @@
     "magnific-popup": "^1.1.0",
     "popper.js": "^1.11.1",
     "sammy": "^0.7.6",
-    "scrollreveal": "3.3.6"
+    "scrollreveal": "3.3.6",
+    "izitoast": "1.1.5"
   },
   "devDependencies": {
     "browser-sync": "2.18.13",

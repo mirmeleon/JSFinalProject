@@ -3,7 +3,6 @@ $(() => {
     const app = Sammy('#main', function (){
        this.use('Handlebars', 'hbs');
 
-
        //HOME PAGE
        this.get('index.html', actionController.renderHome);
        this.get('#/home', actionController.renderHome);
