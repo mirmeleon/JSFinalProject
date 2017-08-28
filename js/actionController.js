@@ -39,7 +39,7 @@ let actionController = (()=>{
         //Get role from localStorage
         ctx.isAdmin = localStorage.getItem('role') === 'Admin';
         $(document).ajaxStart(showLoading);
-        $(document).ajaxStop(hideLoading)
+        $(document).ajaxStop(hideLoading);
         ctx.loadPartials({
             header:'./templates/common/header.hbs',
             pagenation:'templates/common/pagenation.hbs',
@@ -61,7 +61,7 @@ let actionController = (()=>{
         }
         function showLoading() {
             if($('#ordersList').find('#loader')){
-                let loader = $('<div id="loader"></div>')
+                let loader = $('<div id="loader"></div>');
                 $('#ordersList').append(loader)
             }
 
@@ -70,22 +70,22 @@ let actionController = (()=>{
             let orderByCriteria = $('#orderCriteria').val();
 
             let typeCriteria= [];
-            $('.page-item').addClass('disabled')
+            $('.page-item').addClass('disabled');
             let typesToView = $('#ordersCeckBox input').each((i,e) => {if($(e).is(':checked')===true){typeCriteria.push($(e).val())}})
             function getAppIcon(type) {
                 switch(type){
                     case'Mobile':
-                        return 'fa fa-tablet'
+                        return 'fa fa-tablet';
                     case'Desktop':
-                        return 'fa fa-desktop'
+                        return 'fa fa-desktop';
                     case'Web':
-                        return 'fa fa-code'
+                        return 'fa fa-code';
                     case 'Hybrid':
-                        return 'fa fa-gears'
+                        return 'fa fa-gears';
                 }
 
             }
-            $('#ordersList').text('')
+            $('#ordersList').text('');
 
 
             remote.get('appdata','orders','Kinvey')
@@ -213,18 +213,18 @@ let actionController = (()=>{
 
                                         $(document).click(function () {
                                             if(!$(event.target).is(btn)){
-                                                $($('.orderDetails').parent()).attr('class','animated zoomOutUp')
-                                                $(btn).hideBalloon()
+                                                $($('.orderDetails').parent()).attr('class','animated zoomOutUp');
+                                                $(btn).hideBalloon();
 
                                                 $(document).unbind('click');
-                                                $(btn).attr('id','')
+                                                $(btn).attr('id','');
                                                 shown = !shown
                                             }
                                         })
 
                                     }else {
-                                        $($('.orderDetails').parent()).attr('class','animated zoomOutUp')
-                                        $(this).hideBalloon()
+                                        $($('.orderDetails').parent()).attr('class','animated zoomOutUp');
+                                        $(this).hideBalloon();
 
                                         $(document).unbind('click');
                                         $(btn).attr('id','')
@@ -251,7 +251,7 @@ let actionController = (()=>{
                         return currentPart;
                     }
                     function showOrderDetails() {
-                        let orderId = $(this).parent().parent().parent().attr('id')
+                        let orderId = $(this).parent().parent().parent().attr('id');
                         let btn = $(this);
 
                     }
@@ -263,15 +263,15 @@ let actionController = (()=>{
     function renderOrderEdit(ctx) {
         let orderId = ctx.params.id;
         let balloon = $('.orderDetails').parent();
-        balloon.attr('class','animated jello')
-        setTimeout(()=>{balloon.attr('class','animated zoomOut')},1000)
-        setTimeout(()=>{balloon.remove()},3000)
+        balloon.attr('class','animated jello');
+        setTimeout(()=>{balloon.attr('class','animated zoomOut')},1000);
+        setTimeout(()=>{balloon.remove()},3000);
         $(document).unbind('click');
         ctx.orderId = orderId;
         ctx.loggedIn = localStorage.getItem('authtoken') !== null;
         let auth = localStorage.getItem('authtoken');
         ctx.username = localStorage.getItem('username');
-        let url = `orders/${orderId}`
+        let url = `orders/${orderId}`;
         remote.get('appdata',url,auth).then(function (data) {
             ctx.id = data.id;
             ctx.status = data.status;
@@ -284,7 +284,7 @@ let actionController = (()=>{
             ctx.functionality = data.functionality;
             ctx.appType = data.appType;
             ctx.deadline = util.formatDate(data.deadline);
-            ctx[ctx.appType] = 'selected'
+            ctx[ctx.appType] = 'selected';
             ctx.loadPartials({
                 header:'./templates/common/header.hbs',
                 footer:'./templates/common/footer.hbs'
@@ -296,7 +296,7 @@ let actionController = (()=>{
             });
         }).catch(function (reason) {
             console.log(reason);
-        })
+        });
         function editingOrder() {
             let appType = $('#appType').val();
             let pageCount = $('#pageCount').val();
@@ -310,7 +310,7 @@ let actionController = (()=>{
             let publishedDate = ctx.publishedDate;
             let data = {publishedDate:publishedDate,status:status,designElements:designElements,teamName:teamName,name:name,appType:appType,pageCount:pageCount,functionality:functionality,deadline:deadline,comment:comment}
             remote.update('appdata',`orders/${orderId}`,data,auth).then(function (data) {
-                infoBoxController.showInfo('Order edited successful')
+                infoBoxController.showInfo('Order edited successful');
                 ctx.redirect('#/orders')
             }).catch(function (reason) {
                 console.log(reason)
@@ -334,7 +334,6 @@ let actionController = (()=>{
             header:'./templates/common/header.hbs',
             footer:'./templates/common/footer.hbs'
         }).then(function(){
-
             this.partial('./templates/register/register.hbs');
         });
     }
@@ -345,7 +344,7 @@ let actionController = (()=>{
         auth.login(username, password)
             .then(function(userInfo){
                 auth.saveSession(userInfo);
-                infoBoxController.showInfo(`Wellcome ${username} you login successful`)
+                infoBoxController.showInfo(`Wellcome ${username} you login successful`);
                 ctx.redirect('#/home');
             })
     }
@@ -356,7 +355,7 @@ let actionController = (()=>{
         auth.register(username, pass)
             .then(function(userInfo){
                 auth.saveSession(userInfo);
-                infoBoxController.showInfo('Register successful')
+                infoBoxController.showInfo('Register successful');
                 ctx.redirect('#/home');
 
             })
@@ -364,7 +363,7 @@ let actionController = (()=>{
     function actionLogout(ctx) {
         auth.logout().then(function(){
             localStorage.clear();
-            infoBoxController.showInfo('Bye bye')
+            infoBoxController.showInfo('Bye bye');
             ctx.redirect('#/home');
         });
     }
@@ -381,7 +380,7 @@ let actionController = (()=>{
 
         appService.createNewOrder(name, appType, comment, deadline, designElements, functionality, pageCount, publishedDate)
             .then(function () {
-                infoBoxController.showInfo('Order create successful')
+                infoBoxController.showInfo('Order create successful');
                 ctx.redirect('#/orders');
             })//TODO: Show Error message for unsuccessful create new order
     }
@@ -394,5 +393,8 @@ let actionController = (()=>{
         actionRegister,
         actionLogout,
         renderOrders,
-        renderOrderEdit,actionNewOrder,renderNewOrder}
-})()
+        renderOrderEdit,
+        actionNewOrder,
+        renderNewOrder
+    }
+})();

@@ -23,9 +23,9 @@ $(() => {
         //New Order Post
         this.post('#/neworder', actionController.actionNewOrder);
         //ORDERS
-        this.get('#/orders',actionController.renderOrders)
+        this.get('#/orders',actionController.renderOrders);
         //Order Edit
-        this.get('#/orders/edit/:id',actionController.renderOrderEdit)
+        this.get('#/orders/edit/:id',actionController.renderOrderEdit);
         //NEW ORDER
         this.get('#/neworder', actionController.renderNewOrder);
         //New Order Post

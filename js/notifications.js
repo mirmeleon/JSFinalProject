@@ -38,4 +38,4 @@ let notifications = (() => {
     return {
         success, info, warning, error
     }
-})()
+})();

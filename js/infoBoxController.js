@@ -18,7 +18,7 @@ let infoBoxController = (()=>{
             hideDuration: 500,
             css:{ backgroundColor: "#f05f40", color:'#c9beaf'}
 
-        })
+        });
           setTimeout(()=>{$('.infoBox').parent().attr('class','animated zoomOutRight')},2000);
           setTimeout(()=>{$('.infoBox').parent().remove()},3000);
 
@@ -29,4 +29,4 @@ let infoBoxController = (()=>{
     return {showInfo}
     
     
-})()
+})();
