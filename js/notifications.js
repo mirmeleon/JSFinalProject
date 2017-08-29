@@ -28,8 +28,11 @@ let notifications = (() => {
             title: title,
             message: message,
             position: position,
-            progressBar: false,
-            close: false,
+            progressBar: true,
+            color:'#F05F40',
+            transitionIn: 'bounceInRight',
+            transitionOut: 'fadeOutRight',
+            close: true,
             timeout: 3000,
             drag: true
         }

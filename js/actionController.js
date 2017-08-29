@@ -257,7 +257,10 @@ let actionController = (()=>{
                     }
 
 
-                })
+                }).catch(function (reason) {
+                    let errMessage = JSON.parse(reason.responseText).description;
+                notifications.error(`Error:`,`${errMessage}`);
+            })
         }
     }
     function renderOrderEdit(ctx) {
@@ -295,7 +298,8 @@ let actionController = (()=>{
 
             });
         }).catch(function (reason) {
-            console.log(reason);
+            let errMessage = JSON.parse(reason.responseText).description;
+            notifications.error(`Error:`,`${errMessage}`);
         });
         function editingOrder() {
             let appType = $('#appType').val();
@@ -310,10 +314,11 @@ let actionController = (()=>{
             let publishedDate = ctx.publishedDate;
             let data = {publishedDate:publishedDate,status:status,designElements:designElements,teamName:teamName,name:name,appType:appType,pageCount:pageCount,functionality:functionality,deadline:deadline,comment:comment}
             remote.update('appdata',`orders/${orderId}`,data,auth).then(function (data) {
-                infoBoxController.showInfo('Order edited successful');
+                notifications.success(`Order: ${name}`,`editing successful`)
                 ctx.redirect('#/orders')
             }).catch(function (reason) {
-                console.log(reason)
+                let errMessage = JSON.parse(reason.responseText).description;
+                notifications.error(`Error:`,`${errMessage}`);
             })
         }
 
@@ -344,9 +349,13 @@ let actionController = (()=>{
         auth.login(username, password)
             .then(function(userInfo){
                 auth.saveSession(userInfo);
-                infoBoxController.showInfo(`Wellcome ${username} you login successful`);
+                notifications.success('Login success',`Wellcome ${username}`)
                 ctx.redirect('#/home');
-            })
+            }).catch(function (reason) {
+            let errMessage = JSON.parse(reason.responseText).description;
+            console.log(reason)
+            notifications.error(`Error:`,`${errMessage}`);
+        })
     }
     function actionRegister(ctx) {
         let username = ctx.params.username;
@@ -355,16 +364,22 @@ let actionController = (()=>{
         auth.register(username, pass)
             .then(function(userInfo){
                 auth.saveSession(userInfo);
-                infoBoxController.showInfo('Register successful');
+                notifications.success('',`Register success`)
                 ctx.redirect('#/home');
 
-            })
+            }).catch(function (reason) {
+            let errMessage = JSON.parse(reason.responseText).description;
+            notifications.error(`Error:`,`${errMessage}`);
+        })
     }
     function actionLogout(ctx) {
         auth.logout().then(function(){
             localStorage.clear();
-            infoBoxController.showInfo('Bye bye');
+            notifications.success('Logout success',`Bye bye`)
             ctx.redirect('#/home');
+        }).catch(function (reason) {
+            let errMessage = JSON.parse(reason.responseText).description;
+            notifications.error(`Error:`,`${errMessage}`);
         });
     }
     function actionNewOrder(ctx) {
@@ -380,9 +395,12 @@ let actionController = (()=>{
 
         appService.createNewOrder(name, appType, comment, deadline, designElements, functionality, pageCount, publishedDate)
             .then(function () {
-                infoBoxController.showInfo('Order create successful');
+                notifications.success(`Order ${name}`,`created successfull`)
                 ctx.redirect('#/orders');
-            })//TODO: Show Error message for unsuccessful create new order
+            }).catch(function (reason) {
+            let errMessage = JSON.parse(reason.responseText).description;
+            notifications.error(`Error:`,`${errMessage}`);
+        })
     }
 
     return {renderHome,
