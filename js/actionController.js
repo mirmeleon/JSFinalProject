@@ -200,6 +200,11 @@ let actionController = (()=>{
                                     if(shown) {
                                         $($('.orderDetails').parent()).attr('class','')
                                         let currentOrder = data.filter(o=>o._id === orderId)[0];
+
+                                        //Show 'edit' button in details when user is Author
+                                        let isAuthor = currentOrder._acl.creator === localStorage.getItem('id');
+                                        currentOrder.isAuthor = isAuthor;
+
                                         currentOrder.isAdmin = isAdmin;
                                         currentOrder.publishedDate = util.formatDate(currentOrder.publishedDate)
                                         currentOrder.deadline = util.formatDate(currentOrder.deadline)
