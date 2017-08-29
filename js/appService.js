@@ -14,7 +14,25 @@ let appService = (() => {
 
         return remote.post('appdata', 'orders', newOrderData,'Kinvey');
     }
+
+    function editOrder(orderId, publishedDate, status, designElements, teamName, name, appType, pageCount, functionality, deadline, comment) {
+        let editOrderData = {
+            publishedDate:publishedDate,
+            status:status,
+            designElements:designElements,
+            teamName:teamName,
+            name:name,
+            appType:appType,
+            pageCount:pageCount,
+            functionality:functionality,
+            deadline:deadline,
+            comment:comment
+        };
+
+        return remote.update('appdata',`orders/${orderId}`, editOrderData, 'Kinvey')
+    }
     return {
-        createNewOrder
+        createNewOrder,
+        editOrder
     }
 })();

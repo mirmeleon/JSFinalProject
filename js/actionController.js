@@ -275,8 +275,10 @@ let actionController = (()=>{
         setTimeout(()=>{balloon.attr('class','animated zoomOut')},1000);
         setTimeout(()=>{balloon.remove()},3000);
         $(document).unbind('click');
+
         ctx.orderId = orderId;
         ctx.loggedIn = localStorage.getItem('authtoken') !== null;
+
         let auth = localStorage.getItem('authtoken');
         ctx.username = localStorage.getItem('username');
         let url = `orders/${orderId}`;
@@ -317,9 +319,9 @@ let actionController = (()=>{
             let teamName = ctx.teamName;
             let name = ctx.name;
             let publishedDate = ctx.publishedDate;
-            let data = {publishedDate:publishedDate,status:status,designElements:designElements,teamName:teamName,name:name,appType:appType,pageCount:pageCount,functionality:functionality,deadline:deadline,comment:comment}
-            remote.update('appdata',`orders/${orderId}`,data,auth).then(function (data) {
-                notifications.success(`Order: ${name}`,`editing successful`)
+
+            appService.editOrder(orderId, publishedDate, status, designElements, teamName, name, appType, pageCount, functionality, deadline, comment).then(function (data) {
+                notifications.success(`Order: ${name}`,`editing successful`);
                 ctx.redirect('#/orders')
             }).catch(function (reason) {
                 let errMessage = JSON.parse(reason.responseText).description;
@@ -354,7 +356,7 @@ let actionController = (()=>{
         auth.login(username, password)
             .then(function(userInfo){
                 auth.saveSession(userInfo);
-                notifications.success('Login success',`Wellcome ${username}`)
+                notifications.success('Login success',`Wellcome ${username}`);
                 ctx.redirect('#/home');
             }).catch(function (reason) {
             let errMessage = JSON.parse(reason.responseText).description;
@@ -369,7 +371,7 @@ let actionController = (()=>{
         auth.register(username, pass)
             .then(function(userInfo){
                 auth.saveSession(userInfo);
-                notifications.success('',`Register success`)
+                notifications.success('',`Register success`);
                 ctx.redirect('#/home');
 
             }).catch(function (reason) {
@@ -380,7 +382,7 @@ let actionController = (()=>{
     function actionLogout(ctx) {
         auth.logout().then(function(){
             localStorage.clear();
-            notifications.success('Logout success',`Bye bye`)
+            notifications.success('Logout success',`Bye bye`);
             ctx.redirect('#/home');
         }).catch(function (reason) {
             let errMessage = JSON.parse(reason.responseText).description;
@@ -388,7 +390,6 @@ let actionController = (()=>{
         });
     }
     function actionNewOrder(ctx) {
-        console.log(ctx);
         let name = ctx.params.nameOfApp;
         let appType = ctx.params.appType;
         let comment = ctx.params.comment;
@@ -400,7 +401,7 @@ let actionController = (()=>{
 
         appService.createNewOrder(name, appType, comment, deadline, designElements, functionality, pageCount, publishedDate)
             .then(function () {
-                notifications.success(`Order ${name}`,`created successfull`)
+                notifications.success(`Order ${name}`,`created successfull`);
                 ctx.redirect('#/orders');
             }).catch(function (reason) {
             let errMessage = JSON.parse(reason.responseText).description;
