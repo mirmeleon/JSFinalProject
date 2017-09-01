@@ -334,6 +334,9 @@ let actionController = (()=>{
     function renderOrderEditAsUser(ctx) {
         //TODO: to check if the order has been in progress. If it's entered in development can not be edited
         let orderId = ctx.params.id.substr(1);
+        ctx.loggedIn = localStorage.getItem('authtoken') !== null;
+        ctx.username = localStorage.getItem('username');
+
         let balloon = $('.orderDetails').parent();
         balloon.attr('class', 'animated jello');
         setTimeout(() => {
@@ -347,8 +350,7 @@ let actionController = (()=>{
         appService.loadOrderDetails(orderId)
             .then(function (orderInfo) {
                 ctx.orderId = orderId;
-                ctx.loggedIn = localStorage.getItem('authtoken') !== null;
-                ctx.username = localStorage.getItem('username');
+
 
                 if (orderInfo.status !== undefined && orderInfo.status !== null) {
                     localStorage.setItem('status', orderInfo.status);
@@ -383,6 +385,7 @@ let actionController = (()=>{
     function renderNewOrder(ctx) {
         ctx.loggedIn = localStorage.getItem('authtoken') !== null;
         ctx.username = localStorage.getItem('username');
+
         ctx.loadPartials({
             header:'./templates/common/header.hbs',
             footer:'./templates/common/footer.hbs',
@@ -440,6 +443,9 @@ let actionController = (()=>{
         });
     }
     function actionNewOrder(ctx) {
+        if(localStorage.getItem('authtoken') === null){
+            ctx.redirect('#/register');
+        }
         let name = ctx.params.nameOfApp;
         let appType = ctx.params.appType;
         let comment = ctx.params.comment;
