@@ -1,6 +1,6 @@
 let actionController = (()=>{
     function renderHome(ctx) {
-        ctx.loggedIn = localStorage.getItem('authtoken') !== null;
+        ctx.loggedIn = auth.isAuthed;
         ctx.username = localStorage.getItem('username');
 
 
@@ -13,7 +13,7 @@ let actionController = (()=>{
         });
     }
     function renderServices(ctx) {
-        ctx.loggedIn = localStorage.getItem('authtoken') !== null;
+        ctx.loggedIn = auth.isAuthed;
         ctx.username = localStorage.getItem('username');
 
         this.loadPartials({
@@ -34,7 +34,7 @@ let actionController = (()=>{
         });
     }
     function renderOrders(ctx) {
-        ctx.loggedIn = localStorage.getItem('authtoken') !== null;
+        ctx.loggedIn = auth.isAuthed;
         ctx.username = localStorage.getItem('username');
         //Get role from localStorage
         ctx.isAdmin = localStorage.getItem('role') === 'Admin';
@@ -277,7 +277,7 @@ let actionController = (()=>{
         $(document).unbind('click');
 
         ctx.orderId = orderId;
-        ctx.loggedIn = localStorage.getItem('authtoken') !== null;
+        ctx.loggedIn = auth.isAuthed;
 
         let auth = localStorage.getItem('authtoken');
         ctx.username = localStorage.getItem('username');
@@ -334,7 +334,7 @@ let actionController = (()=>{
     function renderOrderEditAsUser(ctx) {
         //TODO: to check if the order has been in progress. If it's entered in development can not be edited
         let orderId = ctx.params.id.substr(1);
-        ctx.loggedIn = localStorage.getItem('authtoken') !== null;
+        ctx.loggedIn = auth.isAuthed;
         ctx.username = localStorage.getItem('username');
 
         let balloon = $('.orderDetails').parent();
@@ -383,7 +383,7 @@ let actionController = (()=>{
         });
     }
     function renderNewOrder(ctx) {
-        ctx.loggedIn = localStorage.getItem('authtoken') !== null;
+        ctx.loggedIn = auth.isAuthed;
         ctx.username = localStorage.getItem('username');
 
         ctx.loadPartials({
@@ -443,7 +443,7 @@ let actionController = (()=>{
         });
     }
     function actionNewOrder(ctx) {
-        if(localStorage.getItem('authtoken') === null){
+        if(auth.isAuthed){
             ctx.redirect('#/register');
         }
         let name = ctx.params.nameOfApp;
