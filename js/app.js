@@ -9,7 +9,7 @@ $(() => {
         //SERVICES
         this.get('#/services',actionController.renderServices);
         //LOGIN
-        this.get('#/login',actionController.renredLogin);
+        this.get('#/login',actionController.renderLogin);
         //Login Post
         this.post('#/login',actionController.actionLogin);
         //REGISTER
@@ -26,6 +26,10 @@ $(() => {
         this.get('#/orders',actionController.renderOrders);
         //Order Edit
         this.get('#/orders/edit/:id',actionController.renderOrderEdit);
+        //Order Edit as User
+        this.get('#/edit/:id',actionController.renderOrderEditAsUser);
+        //Order Edit as User Post Request
+        this.post('#/edit/:id', actionController.actionEditOrderAsUser);
         //NEW ORDER
         this.get('#/neworder', actionController.renderNewOrder);
         //New Order Post

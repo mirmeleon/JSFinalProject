@@ -24,7 +24,7 @@ let actionController = (()=>{
             this.partial('./templates/services/services.hbs');
         })
     }
-    function renredLogin(ctx) {
+    function renderLogin(ctx) {
         this.loadPartials({
             header:'./templates/common/header.hbs',
             footer:'./templates/common/footer.hbs'
@@ -49,7 +49,7 @@ let actionController = (()=>{
 
         }).then(function(){
             this.partial('./templates/orders/orders.hbs').then(function () {
-                $('#orderCriteria').change(showOrdersList)
+                $('#orderCriteria').change(showOrdersList);
                 $('#ordersCeckBox').change(showOrdersList)
 
             });
@@ -320,7 +320,7 @@ let actionController = (()=>{
             let name = ctx.name;
             let publishedDate = ctx.publishedDate;
 
-            appService.editOrder(orderId, publishedDate, status, designElements, teamName, name, appType, pageCount, functionality, deadline, comment).then(function (data) {
+            appService.editOrder(orderId, publishedDate, designElements, name, appType, pageCount, functionality, deadline, comment, status, teamName).then(function (data) {
                 notifications.success(`Order: ${name}`,`editing successful`);
                 ctx.redirect('#/orders')
             }).catch(function (reason) {
@@ -329,6 +329,56 @@ let actionController = (()=>{
             })
         }
 
+    }
+
+    function renderOrderEditAsUser(ctx) {
+        //TODO: to check if the order has been in progress. If it's entered in development can not be edited
+        let orderId = ctx.params.id.substr(1);
+        let balloon = $('.orderDetails').parent();
+        balloon.attr('class', 'animated jello');
+        setTimeout(() => {
+            balloon.attr('class', 'animated zoomOut')
+        }, 500);
+        setTimeout(() => {
+            balloon.remove()
+        }, 500);
+        $(document).unbind('click');
+
+        appService.loadOrderDetails(orderId)
+            .then(function (orderInfo) {
+                ctx.orderId = orderId;
+                ctx.loggedIn = localStorage.getItem('authtoken') !== null;
+                ctx.username = localStorage.getItem('username');
+
+                if (orderInfo.status !== undefined && orderInfo.status !== null) {
+                    localStorage.setItem('status', orderInfo.status);
+                }
+                if(orderInfo.teamName !== undefined && orderInfo.status !== null){
+                    localStorage.setItem('teamName', orderInfo.status);
+                }
+                ctx.nameOfApp = orderInfo.name;
+                ctx.pageCount = orderInfo.pageCount;
+                ctx.functionality = orderInfo.functionality;
+                ctx.deadline = util.formatDate(orderInfo.deadline);
+                ctx.comment = orderInfo.comment;
+                ctx.appType = orderInfo.appType;
+                ctx[ctx.appType] = 'selected';
+                if (orderInfo.designElements === "Yes"){
+                    ctx.checkYes = "checked";
+                }else {
+                    ctx.checkNo = "checked";
+                }
+                ctx.loadPartials({
+                    header: './templates/common/header.hbs',
+                    footer: './templates/common/footer.hbs',
+                    editOrderForm: './templates/orders/editOrderFm.hbs'
+                }).then(function () {
+                    this.partial('./templates/orders/editOrderPg.hbs');
+                });
+            }).catch(function (reason) {
+            let errMessage = JSON.parse(reason.responseText).description;
+            notifications.error(`Error:`, `${errMessage}`);
+        });
     }
     function renderNewOrder(ctx) {
         ctx.loggedIn = localStorage.getItem('authtoken') !== null;
@@ -360,7 +410,7 @@ let actionController = (()=>{
                 ctx.redirect('#/home');
             }).catch(function (reason) {
             let errMessage = JSON.parse(reason.responseText).description;
-            console.log(reason)
+            console.log(reason);
             notifications.error(`Error:`,`${errMessage}`);
         })
     }
@@ -409,9 +459,34 @@ let actionController = (()=>{
         })
     }
 
+    function actionEditOrderAsUser(ctx) {
+        let orderId = ctx.params.id.substr(1);
+        let name = ctx.params.nameOfApp;
+        let appType = ctx.params.appType;
+        let comment = ctx.params.comment;
+        let deadline = ctx.params.deadline;
+        let designElements = ctx.params.designElements;
+        let functionality = ctx.params.functionality;
+        let pageCount = ctx.params.pageCount;
+        let publishedDate = new Date();
+        let status = localStorage.getItem('status');
+        let teamName = localStorage.getItem('teamName');
+
+        appService.editOrder(orderId, publishedDate, designElements, name, appType, pageCount, functionality, deadline, comment, status, teamName)
+            .then(function () {
+                notifications.success(`Order ${name}`, `edited successfull`);
+                localStorage.removeItem('status');
+                localStorage.removeItem('teamName');
+                ctx.redirect('#/orders');
+            }).catch(function (reason) {
+            let errMessage = JSON.parse(reason.responseText).description;
+            notifications.error(`Error:`, `${errMessage}`);
+        })
+    }
+
     return {renderHome,
         renderServices,
-        renredLogin,
+        renderLogin,
         renderRegister,
         actionLogin,
         actionRegister,
@@ -419,6 +494,8 @@ let actionController = (()=>{
         renderOrders,
         renderOrderEdit,
         actionNewOrder,
-        renderNewOrder
+        renderNewOrder,
+        renderOrderEditAsUser,
+        actionEditOrderAsUser
     }
 })();

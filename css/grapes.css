@@ -24,6 +24,9 @@
 .new-order{
     position: relative;
 }
+#editOrderDiv{
+    max-width: 600px;
+}
 #ordersHeader{
     font-size: xx-large;
     padding-bottom: 5%;
