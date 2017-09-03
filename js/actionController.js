@@ -279,10 +279,10 @@ let actionController = (()=>{
         ctx.orderId = orderId;
         ctx.loggedIn = auth.isAuthed;
 
-        let auth = localStorage.getItem('authtoken');
+        let authentication = localStorage.getItem('authtoken');
         ctx.username = localStorage.getItem('username');
         let url = `orders/${orderId}`;
-        remote.get('appdata',url,auth).then(function (data) {
+        remote.get('appdata',url,authentication).then(function (data) {
             ctx.id = data.id;
             ctx.status = data.status;
             ctx.teamName = data.teamName;
