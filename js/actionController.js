@@ -190,6 +190,10 @@ let actionController = (()=>{
                                     $(this).css('background-color','#FFFFFF')
                                 })
                                 let isAdmin = localStorage.getItem('role') === 'Admin';
+
+                                //Show 'edit' button in details when current user is teamMember
+                                let isTeamMember = localStorage.getItem('role') === 'teamMember';
+
                                 var orderDetailsTemplete = Handlebars.compile(response[2]);
                                 var shown = true;
                                 $('.btnDetails').on("click", function() {
@@ -201,9 +205,18 @@ let actionController = (()=>{
                                         $($('.orderDetails').parent()).attr('class','')
                                         let currentOrder = data.filter(o=>o._id === orderId)[0];
 
+                                        if (currentOrder.status !== undefined && currentOrder.status !== null) {
+                                            currentOrder.isNotInProduction = false;
+                                        }else{
+                                            currentOrder.isNotInProduction = true;
+                                        }
+
                                         //Show 'edit' button in details when user is Author
                                         let isAuthor = currentOrder._acl.creator === localStorage.getItem('id');
                                         currentOrder.isAuthor = isAuthor;
+
+                                        //Show 'edit' button in details when current user is teamMember
+                                        currentOrder.isTeamMember = isTeamMember;
 
                                         currentOrder.isAdmin = isAdmin;
                                         currentOrder.publishedDate = util.formatDate(currentOrder.publishedDate)
@@ -269,73 +282,12 @@ let actionController = (()=>{
         }
     }
     function renderOrderEdit(ctx) {
-        let orderId = ctx.params.id;
-        let balloon = $('.orderDetails').parent();
-        balloon.attr('class','animated jello');
-        setTimeout(()=>{balloon.attr('class','animated zoomOut')},1000);
-        setTimeout(()=>{balloon.remove()},3000);
-        $(document).unbind('click');
-
-        ctx.orderId = orderId;
-        ctx.loggedIn = auth.isAuthed;
-
-        let authentication = localStorage.getItem('authtoken');
-        ctx.username = localStorage.getItem('username');
-        let url = `orders/${orderId}`;
-        remote.get('appdata',url,authentication).then(function (data) {
-            ctx.id = data.id;
-            ctx.status = data.status;
-            ctx.teamName = data.teamName;
-            ctx.publishedDate = data.publishedDate;
-            ctx.designElements = data.designElements;
-            ctx.name = data.name;
-            ctx.comment = data.comment;
-            ctx.pageCount = data.pageCount;
-            ctx.functionality = data.functionality;
-            ctx.appType = data.appType;
-            ctx.deadline = util.formatDate(data.deadline);
-            ctx[ctx.appType] = 'selected';
-            ctx.loadPartials({
-                header:'./templates/common/header.hbs',
-                footer:'./templates/common/footer.hbs'
-            }).then(function(){
-                this.partial('./templates/orders/editOrder.hbs').then(function () {
-                    $('.editOrderBtn').click(editingOrder)
-                });
-
-            });
-        }).catch(function (reason) {
-            let errMessage = JSON.parse(reason.responseText).description;
-            notifications.error(`Error:`,`${errMessage}`);
-        });
-        function editingOrder() {
-            let appType = $('#appType').val();
-            let pageCount = $('#pageCount').val();
-            let functionality = $('#functionality').val();
-            let deadline = $('#deadline').val();
-            let comment = $('#comment').text();
-            let status = ctx.status;
-            let designElements = ctx.designElements;
-            let teamName = ctx.teamName;
-            let name = ctx.name;
-            let publishedDate = ctx.publishedDate;
-
-            appService.editOrder(orderId, publishedDate, designElements, name, appType, pageCount, functionality, deadline, comment, status, teamName).then(function (data) {
-                notifications.success(`Order: ${name}`,`editing successful`);
-                ctx.redirect('#/orders')
-            }).catch(function (reason) {
-                let errMessage = JSON.parse(reason.responseText).description;
-                notifications.error(`Error:`,`${errMessage}`);
-            })
-        }
-
-    }
-
-    function renderOrderEditAsUser(ctx) {
         //TODO: to check if the order has been in progress. If it's entered in development can not be edited
         let orderId = ctx.params.id.substr(1);
         ctx.loggedIn = auth.isAuthed;
         ctx.username = localStorage.getItem('username');
+        ctx.isTeamMember = localStorage.getItem('role') === 'teamMember';
+        ctx.isAdmin = localStorage.getItem('role') === 'Admin';
 
         let balloon = $('.orderDetails').parent();
         balloon.attr('class', 'animated jello');
@@ -349,15 +301,12 @@ let actionController = (()=>{
 
         appService.loadOrderDetails(orderId)
             .then(function (orderInfo) {
+                ctx.isAuthor = orderInfo._acl.creator === localStorage.getItem('id');
                 ctx.orderId = orderId;
-
-
-                if (orderInfo.status !== undefined && orderInfo.status !== null) {
-                    localStorage.setItem('status', orderInfo.status);
-                }
-                if(orderInfo.teamName !== undefined && orderInfo.status !== null){
-                    localStorage.setItem('teamName', orderInfo.status);
-                }
+                ctx.appStatus = orderInfo.status;
+                ctx[ctx.appStatus] = 'selected';
+                ctx.teamName = orderInfo.teamName;
+                ctx.publishedDate = orderInfo.publishedDate;
                 ctx.nameOfApp = orderInfo.name;
                 ctx.pageCount = orderInfo.pageCount;
                 ctx.functionality = orderInfo.functionality;
@@ -370,17 +319,62 @@ let actionController = (()=>{
                 }else {
                     ctx.checkNo = "checked";
                 }
+
                 ctx.loadPartials({
                     header: './templates/common/header.hbs',
                     footer: './templates/common/footer.hbs',
-                    editOrderForm: './templates/orders/editOrderFm.hbs'
+                    //editOrderForm: './templates/orders/editOrderFm.hbs'
                 }).then(function () {
-                    this.partial('./templates/orders/editOrderPg.hbs');
+                    this.partial('./templates/orders/editOrderPg.hbs')
+                        .then(function () {
+                            $('#editOrderBtn').click(actionEditOrder)
+                        })
                 });
             }).catch(function (reason) {
             let errMessage = JSON.parse(reason.responseText).description;
             notifications.error(`Error:`, `${errMessage}`);
         });
+
+        function actionEditOrder() {
+
+            let name, appType, pageCount, functionality, deadline, comment, designElements, status;
+
+            if(ctx.isAuthor) name = $('#nameOfApp').val();
+            else name = ctx.nameOfApp;
+
+            if(ctx.isAuthor) appType = $('#appType').val();
+            else appType = ctx.appType;
+
+            if(ctx.isAuthor) pageCount = $('#numberOfPage').val();
+            else pageCount = ctx.pageCount;
+
+            if(ctx.isAuthor) functionality = $('#functionality').val();
+            else functionality = ctx.functionality;
+
+            if(ctx.isAuthor) deadline = $('#deadline').val();
+            else deadline = ctx.deadline;
+
+            if(ctx.isAuthor)comment = $('#comment').text();
+            else comment = ctx.comment;
+
+            if (ctx.isAuthor) designElements = $("input[type='radio'][name='designElements']:checked").val();
+            else designElements = ctx.appType;
+
+            if(ctx.isTeamMember) status = $('#appStatus').val();
+            else status = ctx.appStatus;
+
+            let teamName = ctx.teamName;
+            let publishedDate = ctx.publishedDate;
+
+            appService.editOrder(orderId, publishedDate, designElements, name, appType, pageCount, functionality, deadline, comment, status, teamName)
+                .then(function () {
+                    notifications.success(`Order ${name}`, `edited successfull`);
+                    ctx.redirect('#/orders');
+                }).catch(function (reason) {
+                let errMessage = JSON.parse(reason.responseText).description;
+                notifications.error(`Error:`, `${errMessage}`);
+            })
+        }
     }
     function renderNewOrder(ctx) {
         ctx.loggedIn = auth.isAuthed;
@@ -465,31 +459,6 @@ let actionController = (()=>{
         })
     }
 
-    function actionEditOrderAsUser(ctx) {
-        let orderId = ctx.params.id.substr(1);
-        let name = ctx.params.nameOfApp;
-        let appType = ctx.params.appType;
-        let comment = ctx.params.comment;
-        let deadline = ctx.params.deadline;
-        let designElements = ctx.params.designElements;
-        let functionality = ctx.params.functionality;
-        let pageCount = ctx.params.pageCount;
-        let publishedDate = new Date();
-        let status = localStorage.getItem('status');
-        let teamName = localStorage.getItem('teamName');
-
-        appService.editOrder(orderId, publishedDate, designElements, name, appType, pageCount, functionality, deadline, comment, status, teamName)
-            .then(function () {
-                notifications.success(`Order ${name}`, `edited successfull`);
-                localStorage.removeItem('status');
-                localStorage.removeItem('teamName');
-                ctx.redirect('#/orders');
-            }).catch(function (reason) {
-            let errMessage = JSON.parse(reason.responseText).description;
-            notifications.error(`Error:`, `${errMessage}`);
-        })
-    }
-
     return {renderHome,
         renderServices,
         renderLogin,
@@ -498,10 +467,8 @@ let actionController = (()=>{
         actionRegister,
         actionLogout,
         renderOrders,
-        renderOrderEdit,
         actionNewOrder,
         renderNewOrder,
-        renderOrderEditAsUser,
-        actionEditOrderAsUser
+        renderOrderEdit
     }
 })();

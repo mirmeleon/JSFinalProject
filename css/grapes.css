@@ -23,9 +23,11 @@
  }
 .new-order{
     position: relative;
+    padding-top: 20px;
+    padding-bottom: 5px;
 }
-#editOrderDiv{
-    max-width: 600px;
+select.form-control#appType, select.form-control#appStatus, select.form-control#assignedTeam{
+    height: calc(2.25rem + 8px);
 }
 #ordersHeader{
     font-size: xx-large;

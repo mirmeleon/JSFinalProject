@@ -23,23 +23,50 @@
             <tr><td><li class="list-group-item"><i class="icon-ok text-danger"></i>Page count</li></td><td><li class="list-group-item"><i class="icon-ok text-danger"></i>{{#if pageCount}}{{pageCount}}{{else}}<i class="fa fa-minus"></i>{{/if}}</li></td></tr>
         </table>
     </ul>
-    {{#if isAdmin}}
-    <br>
-    <i>edited {{lastModifyDate}} ago</i>
-    <br>
-    <br>
-        <div class="panel-footer">
-            <a class="btn btn-lg btn-block btn-success" href="#/orders/edit/{{_id}}">Edit</a>
-        </div>
-    {{else if isAuthor}}
-        <br>
-        <div class="panel-footer">
-            <a class="btn btn-lg btn-block btn-success" href="#/edit/:{{_id}}">Edit</a>
-        </div>
+    {{#if isNotInProduction}}
+        {{#if isAdmin}}
+            <br>
+            <i>edited {{lastModifyDate}} ago</i>
+            <br>
+            <br>
+            <div class="panel-footer">
+                <a class="btn btn-lg btn-block btn-success" href="#/orders/edit/:{{_id}}">Edit</a>
+            </div>
+        {{/if}}
+        {{#if isAuthor}}
+            <br>
+            <i>edited {{lastModifyDate}} ago</i>
+            <br>
+            <br>
+            <div class="panel-footer">
+                <a class="btn btn-lg btn-block btn-success" href="#/orders/edit/:{{_id}}">Edit</a>
+            </div>
+        {{else}}
+            <br>
+            <br>
+            <i class="fa fa-info">  {{#if isAdmin}}This{{else if isAuthor}}Your{{else}}The{{/if}} order can't be edited as it's you are not Author</i>
+        {{/if}}
     {{else}}
+        {{#if isAdmin}}
+            <br>
+            <i>edited {{lastModifyDate}} ago</i>
+            <br>
+            <br>
+            <div class="panel-footer">
+                <a class="btn btn-lg btn-block btn-success" href="#/orders/edit/:{{_id}}">Edit</a>
+            </div>
+        {{/if}}
+        {{#if isTeamMember}}
+            <br>
+            <br>
+            <div class="panel-footer">
+                <a class="btn btn-lg btn-block btn-success" href="#/orders/edit/:{{_id}}">Edit</a>
+            </div>
+        {{else}}
         <br>
         <br>
-        <i class="fa fa-info">    Your order can't be edites as it's entered in development</i>
+        <i class="fa fa-info">  {{#if isAdmin}}This{{else if isAuthor}}Your{{else}}The{{/if}} order can't be edited as it's entered in development</i>
+        {{/if}}
     {{/if}}
 
 </div>
