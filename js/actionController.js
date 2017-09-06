@@ -2,6 +2,7 @@ let actionController = (()=>{
     function renderHome(ctx) {
         ctx.loggedIn = auth.isAuthed;
         ctx.username = localStorage.getItem('username');
+        ctx.isAdmin = localStorage.getItem('role') === 'Admin';
 
 
         this.loadPartials({
@@ -15,6 +16,7 @@ let actionController = (()=>{
     function renderServices(ctx) {
         ctx.loggedIn = auth.isAuthed;
         ctx.username = localStorage.getItem('username');
+        ctx.isAdmin = localStorage.getItem('role') === 'Admin';
 
         this.loadPartials({
             header:'./templates/common/header.hbs',
@@ -398,6 +400,7 @@ let actionController = (()=>{
     function renderNewOrder(ctx) {
         ctx.loggedIn = auth.isAuthed;
         ctx.username = localStorage.getItem('username');
+        ctx.isAdmin = localStorage.getItem('role') === 'Admin';
 
         ctx.loadPartials({
             header:'./templates/common/header.hbs',
@@ -406,6 +409,19 @@ let actionController = (()=>{
         }).then(function(){
             this.partial('./templates/orders/newOrderPage.hbs');
         });
+    }
+    function renderTeams(ctx) {
+        ctx.loggedIn = auth.isAuthed;
+        ctx.username = localStorage.getItem('username');
+        ctx.isAdmin = localStorage.getItem('role') === 'Admin';
+
+        ctx.loadPartials({
+            header: './templates/common/header.hbs',
+            footer: './templates/common/footer.hbs'
+        }).then(function () {
+            this.partial('./templates/teams/teams.hbs')
+        })
+
     }
     function renderRegister(ctx) {
         this.loadPartials({
@@ -486,6 +502,7 @@ let actionController = (()=>{
         actionRegister,
         actionLogout,
         renderOrders,
+        renderTeams,
         actionNewOrder,
         renderNewOrder,
         renderOrderEdit

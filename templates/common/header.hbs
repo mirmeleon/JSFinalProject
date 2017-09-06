@@ -13,12 +13,17 @@
                 <a class="nav-link" href="#/services" id="linkServices">Services</a>
             </li>
             {{#if loggedIn}}
-            <li class="nav-item">
-                <a class="nav-link" href="#/orders" id="linkOrders">Orders</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#/neworder" id="linkNewOrder">New Order</a>
-            </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#/orders" id="linkOrders">Orders</a>
+                </li>
+                {{#if isAdmin}}
+                    <li class="nav-item">
+                        <a class="nav-link" href="#/teams" id="linkTeams">Teams</a>
+                    </li>
+                {{/if}}
+                <li class="nav-item">
+                    <a class="nav-link" href="#/neworder" id="linkNewOrder">New Order</a>
+                </li>
             {{else}}
             <li class="nav-item">
                 <a class="nav-link" href="#/login" id="linkLogin">Login</a>
