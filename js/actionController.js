@@ -205,10 +205,10 @@ let actionController = (()=>{
                                         $($('.orderDetails').parent()).attr('class','')
                                         let currentOrder = data.filter(o=>o._id === orderId)[0];
 
-                                        if (currentOrder.status !== undefined || currentOrder.status !== null) {
-                                            currentOrder.isNotInProduction = true;
+                                        if (currentOrder.status === undefined || currentOrder.status === null) {
+                                            currentOrder.isInProduction = false;
                                         }else{
-                                            currentOrder.isNotInProduction = false;
+                                            currentOrder.isInProduction = true;
                                         }
 
                                         //Show 'edit' button in details when user is Author
@@ -301,7 +301,6 @@ let actionController = (()=>{
 
         appService.loadOrderDetails(orderId)
             .then(function (orderInfo) {
-                console.log(orderInfo.status);
                 if (orderInfo.status === undefined || orderInfo.status === null){
                     ctx.isInProduction = false;
                 }
@@ -335,7 +334,6 @@ let actionController = (()=>{
                 }).then(function () {
                     this.partial('./templates/orders/editOrderPg.hbs')
                         .then(function () {
-                            console.log(ctx.isInProduction);
                             if(ctx.isInProduction === true) $('#orderDetails').hide();
                             $('#editOrderBtn').click(actionEditOrder);
                             $('#enableEditing').click(function () {

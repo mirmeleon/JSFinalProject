@@ -91,6 +91,7 @@
                             <label for="appStatus" class="label">App Status</label>
                             <select id="appStatus" name="appStatus" type="text" class="form-control dropdown-toggle"
                                     placeholder="App Status">
+                                    <option value="" selected disabled hidden>No Status...</option>
                                 {{#if Development}}
                                     <option selected="selected">Development</option>  {{else}}
                                     <option>Development</option>    {{/if}}
