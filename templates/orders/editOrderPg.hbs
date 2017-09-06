@@ -115,6 +115,7 @@
                             <label for="appStatus" class="label">App Status</label>
                             <select id="appStatus" name="appStatus" type="text" class="form-control dropdown-toggle"
                                     placeholder="App Status">
+                                <option value="" selected disabled hidden>No Status...</option>
                                 {{#if Development}}
                                     <option selected="selected">Development</option>  {{else}}
                                     <option>Development</option>    {{/if}}
@@ -129,8 +130,10 @@
 
                         <div class="group">
                             <label for="assignedTeam" class="label">Assigned Team</label>
-                            <select id="assignedTeam" name="assignedTeam" type="text" class="form-control dropdown-toggle"
+                            <select id="assignedTeam" name="assignedTeam" type="text"
+                                    class="form-control dropdown-toggle"
                                     placeholder="Enter in production">
+                                <option value="" selected disabled hidden>No Team...</option>
                                 <option>Team Banana</option>
                                 <option>Team The Best</option>
                                 <option>Team Kiwi</option>
@@ -139,83 +142,90 @@
                         </div>
 
                         <h1 class="section-header">Order Details:</h1>
-                        {{#if isNotInProduction}}
-                        <div class="group">
-                            <label for="appType" class="label">App Type</label>
-                            <select id="appType" name="appType" type="text" class="form-control dropdown-toggle"
-                                    placeholder="App type">
-                                {{#if Desktop}}
-                                    <option selected="selected">Desktop</option>  {{else}}
-                                    <option>Desktop</option>    {{/if}}
-                                {{#if Mobile}}
-                                    <option selected="selected">Mobile</option>  {{else}}
-                                    <option>Mobile</option>    {{/if}}
-                                {{#if Web}}
-                                    <option selected="selected">Web</option>  {{else}}
-                                    <option>Web</option>  {{/if}}
-                                {{#if Hybrid}}
-                                    <option selected="selected">Hybrid</option>  {{else}}
-                                    <option>Hybrid</option> {{/if}}
-                            </select>
-                        </div>
-
-                        <div class="group">
-                            <label for="nameOfApp" class="label">Name Of App</label>
-                            <input id="nameOfApp" name="nameOfApp" type="text" class="form-control" data-type="text"
-                                   maxlength="35"
-                                   value="{{nameOfApp}}">
-                        </div>
-
-                        <div class="group">
-                            <label for="numberOfPage" class="label">Number Of Page</label>
-                            <input id="numberOfPage" name="pageCount" type="number" class="form-control"
-                                   data-type="number"
-                                   value="{{pageCount}}">
-                        </div>
-
-                        <fieldset class="form-group">
-                            <legend>Do you have ready design?</legend>
-                            <div class="form-check">
-                                <label class="form-check-label">
-                                    <input type="radio" class="form-check-input" name="designElements"
-                                           id="optionsRadios1"
-                                           value="Yes" {{checkYes}}>
-                                    YES
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <label class="form-check-label">
-                                    <input type="radio" class="form-check-input" name="designElements"
-                                           id="optionsRadios2"
-                                           value="No" {{checkNo}}>
-                                    NO
-                                </label>
-                            </div>
-                        </fieldset>
-
-                        <div class="group">
-                            <label for="deadline" class="label">Enter your deadline(if you have)</label>
-                            <input id="deadline" name="deadline" type="date" class="form-control" data-type="date"
-                                   value="{{deadline}}">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="functionality">Describe desired functionality:</label>
-                            <textarea class="form-control" id="functionality" name="functionality" rows="5"
-                                      maxlength="100">{{functionality}}</textarea>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="comment">Leave your comment here</label>
-                            <textarea class="form-control" id="comment" name="comment" rows="5"
-                                      maxlength="100">{{comment}}</textarea>
-                        </div>
-                        {{else}}
-                            <div class="form-group">
-                                <h4 class="text-info"><i class="fa fa-info"> The order status is: <span class="text-warning"> {{appStatus}}</span></i></h4>
-                                <input type="checkbox" name="enableEditing" value="enableEditing"><span class="text-danger"> Enable Editing</span>
+                        {{#if isInProduction}}
+                            <div id="enableEditingInfo" class="form-group">
+                                <br>
+                                <h4 class="text-info"><i class="fa fa-info"> The order status is: <span
+                                        class="text-warning"> {{appStatus}}</span></i></h4>
+                                <input id="enableEditing" type="button" name="enableEditing" value="Enable Editing!" class="btn btn-danger">
+                                <br>
+                                <br>
                             </div>
                         {{/if}}
+                            <div id="orderDetails" class="form-group">
+                                <div class="group">
+                                    <label for="appType" class="label">App Type</label>
+                                    <select id="appType" name="appType" type="text" class="form-control dropdown-toggle"
+                                            placeholder="App type">
+                                        {{#if Desktop}}
+                                            <option selected="selected">Desktop</option>  {{else}}
+                                            <option>Desktop</option>    {{/if}}
+                                        {{#if Mobile}}
+                                            <option selected="selected">Mobile</option>  {{else}}
+                                            <option>Mobile</option>    {{/if}}
+                                        {{#if Web}}
+                                            <option selected="selected">Web</option>  {{else}}
+                                            <option>Web</option>  {{/if}}
+                                        {{#if Hybrid}}
+                                            <option selected="selected">Hybrid</option>  {{else}}
+                                            <option>Hybrid</option> {{/if}}
+                                    </select>
+                                </div>
+
+                                <div class="group">
+                                    <label for="nameOfApp" class="label">Name Of App</label>
+                                    <input id="nameOfApp" name="nameOfApp" type="text" class="form-control"
+                                           data-type="text"
+                                           maxlength="35"
+                                           value="{{nameOfApp}}">
+                                </div>
+
+                                <div class="group">
+                                    <label for="numberOfPage" class="label">Number Of Page</label>
+                                    <input id="numberOfPage" name="pageCount" type="number" class="form-control"
+                                           data-type="number"
+                                           value="{{pageCount}}">
+                                </div>
+
+                                <fieldset class="form-group">
+                                    <legend>Do you have ready design?</legend>
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input type="radio" class="form-check-input" name="designElements"
+                                                   id="optionsRadios1"
+                                                   value="Yes" {{checkYes}}>
+                                            YES
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input type="radio" class="form-check-input" name="designElements"
+                                                   id="optionsRadios2"
+                                                   value="No" {{checkNo}}>
+                                            NO
+                                        </label>
+                                    </div>
+                                </fieldset>
+
+                                <div class="group">
+                                    <label for="deadline" class="label">Enter your deadline(if you have)</label>
+                                    <input id="deadline" name="deadline" type="date" class="form-control"
+                                           data-type="date"
+                                           value="{{deadline}}">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="functionality">Describe desired functionality:</label>
+                                    <textarea class="form-control" id="functionality" name="functionality" rows="5"
+                                              maxlength="100">{{functionality}}</textarea>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="comment">Leave your comment here</label>
+                                    <textarea class="form-control" id="comment" name="comment" rows="5"
+                                              maxlength="100">{{comment}}</textarea>
+                                </div>
+                            </div>
                     </form>
 
                     <div class="group">

@@ -301,11 +301,13 @@ let actionController = (()=>{
 
         appService.loadOrderDetails(orderId)
             .then(function (orderInfo) {
+                console.log(orderInfo.status);
                 if (orderInfo.status === undefined || orderInfo.status === null){
-                    ctx.isNotInProduction = true;
+                    ctx.isInProduction = false;
                 }
                 else {
-                    ctx.isNotInProduction = false;
+                    ctx.isInProduction = true;
+
                 }
                 ctx.isAuthor = orderInfo._acl.creator === localStorage.getItem('id');
                 ctx.orderId = orderId;
@@ -333,7 +335,13 @@ let actionController = (()=>{
                 }).then(function () {
                     this.partial('./templates/orders/editOrderPg.hbs')
                         .then(function () {
-                            $('#editOrderBtn').click(actionEditOrder)
+                            console.log(ctx.isInProduction);
+                            if(ctx.isInProduction === true) $('#orderDetails').hide();
+                            $('#editOrderBtn').click(actionEditOrder);
+                            $('#enableEditing').click(function () {
+                                $('#orderDetails').show();
+                                $('#enableEditingInfo').hide();
+                            })
                         })
                 });
             }).catch(function (reason) {
