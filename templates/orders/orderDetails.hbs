@@ -32,8 +32,7 @@
             <div class="panel-footer">
                 <a class="btn btn-lg btn-block btn-success" href="#/orders/edit/:{{_id}}">Edit</a>
             </div>
-        {{/if}}
-        {{#if isAuthor}}
+        {{else if isAuthor}}
             <br>
             <i>edited {{lastModifyDate}} ago</i>
             <br>
@@ -44,7 +43,7 @@
         {{else}}
             <br>
             <br>
-            <i class="fa fa-info">  {{#if isAdmin}}This{{else if isAuthor}}Your{{else}}The{{/if}} order can't be edited as it's you are not Author</i>
+            <i class="fa fa-info">  {{#if isAuthor}}Your{{else}}The{{/if}} order can't be edited as it's entered in development</i>
         {{/if}}
     {{else}}
         {{#if isAdmin}}
@@ -55,8 +54,7 @@
             <div class="panel-footer">
                 <a class="btn btn-lg btn-block btn-success" href="#/orders/edit/:{{_id}}">Edit</a>
             </div>
-        {{/if}}
-        {{#if isTeamMember}}
+        {{else if isTeamMember}}
             <br>
             <br>
             <div class="panel-footer">
@@ -65,7 +63,7 @@
         {{else}}
         <br>
         <br>
-        <i class="fa fa-info">  {{#if isAdmin}}This{{else if isAuthor}}Your{{else}}The{{/if}} order can't be edited as it's entered in development</i>
+            <i class="fa fa-info">  {{#if isAuthor}}Your{{else}}The{{/if}} order can't be edited as it's entered in development</i>
         {{/if}}
     {{/if}}
 

@@ -337,33 +337,40 @@ let actionController = (()=>{
 
         function actionEditOrder() {
 
-            let name, appType, pageCount, functionality, deadline, comment, designElements, status;
+            let name, appType, pageCount, functionality, deadline, comment, designElements, status, teamName;
 
-            if(ctx.isAuthor) name = $('#nameOfApp').val();
+            if(ctx.isAuthor || ctx.isAdmin) name = $('#nameOfApp').val();
             else name = ctx.nameOfApp;
 
-            if(ctx.isAuthor) appType = $('#appType').val();
+            if(ctx.isAuthor || ctx.isAdmin) appType = $('#appType').val();
             else appType = ctx.appType;
 
-            if(ctx.isAuthor) pageCount = $('#numberOfPage').val();
+            if(ctx.isAuthor || ctx.isAdmin) pageCount = $('#numberOfPage').val();
             else pageCount = ctx.pageCount;
 
-            if(ctx.isAuthor) functionality = $('#functionality').val();
+            if(ctx.isAuthor || ctx.isAdmin) functionality = $('#functionality').val();
             else functionality = ctx.functionality;
 
-            if(ctx.isAuthor) deadline = $('#deadline').val();
+            if(ctx.isAuthor || ctx.isAdmin) deadline = $('#deadline').val();
             else deadline = ctx.deadline;
 
-            if(ctx.isAuthor)comment = $('#comment').text();
+            if(ctx.isAuthor || ctx.isAdmin)comment = $('#comment').text();
             else comment = ctx.comment;
 
-            if (ctx.isAuthor) designElements = $("input[type='radio'][name='designElements']:checked").val();
+            if (ctx.isAuthor || ctx.isAdmin) designElements = $("input[type='radio'][name='designElements']:checked").val();
             else designElements = ctx.appType;
 
-            if(ctx.isTeamMember) status = $('#appStatus').val();
+            if(ctx.isTeamMember || ctx.isAdmin) status = $('#appStatus').val();
             else status = ctx.appStatus;
 
-            let teamName = ctx.teamName;
+            //TODO: teams load and edit
+            /*
+            if(ctx.isAdmin) teamName = $('#assignedTeam').val();
+            else teamName = ctx.teamName;
+            */
+
+            //TODO: Check order is in production when Admin editing and disabled order details editselect..
+            teamName = ctx.teamName;
             let publishedDate = ctx.publishedDate;
 
             appService.editOrder(orderId, publishedDate, designElements, name, appType, pageCount, functionality, deadline, comment, status, teamName)
