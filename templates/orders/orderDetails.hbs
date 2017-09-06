@@ -32,14 +32,6 @@
             <div class="panel-footer">
                 <a class="btn btn-lg btn-block btn-success" href="#/orders/edit/:{{_id}}">Edit</a>
             </div>
-        {{else if isAuthor}}
-            <br>
-            <i>edited {{lastModifyDate}} ago</i>
-            <br>
-            <br>
-            <div class="panel-footer">
-                <a class="btn btn-lg btn-block btn-success" href="#/orders/edit/:{{_id}}">Edit</a>
-            </div>
         {{else if isTeamMember}}
                 <br>
                 <br>
@@ -53,6 +45,14 @@
         {{/if}}
     {{else}}
         {{#if isAdmin}}
+            <br>
+            <i>edited {{lastModifyDate}} ago</i>
+            <br>
+            <br>
+            <div class="panel-footer">
+                <a class="btn btn-lg btn-block btn-success" href="#/orders/edit/:{{_id}}">Edit</a>
+            </div>
+        {{else if isAuthor}}
             <br>
             <i>edited {{lastModifyDate}} ago</i>
             <br>
