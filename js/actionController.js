@@ -205,10 +205,10 @@ let actionController = (()=>{
                                         $($('.orderDetails').parent()).attr('class','')
                                         let currentOrder = data.filter(o=>o._id === orderId)[0];
 
-                                        if (currentOrder.status !== undefined && currentOrder.status !== null) {
-                                            currentOrder.isNotInProduction = false;
-                                        }else{
+                                        if (currentOrder.status !== undefined || currentOrder.status !== null) {
                                             currentOrder.isNotInProduction = true;
+                                        }else{
+                                            currentOrder.isNotInProduction = false;
                                         }
 
                                         //Show 'edit' button in details when user is Author
@@ -301,6 +301,12 @@ let actionController = (()=>{
 
         appService.loadOrderDetails(orderId)
             .then(function (orderInfo) {
+                if (orderInfo.status === undefined || orderInfo.status === null){
+                    ctx.isNotInProduction = true;
+                }
+                else {
+                    ctx.isNotInProduction = false;
+                }
                 ctx.isAuthor = orderInfo._acl.creator === localStorage.getItem('id');
                 ctx.orderId = orderId;
                 ctx.appStatus = orderInfo.status;

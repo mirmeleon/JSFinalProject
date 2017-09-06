@@ -139,7 +139,7 @@
                         </div>
 
                         <h1 class="section-header">Order Details:</h1>
-
+                        {{#if isNotInProduction}}
                         <div class="group">
                             <label for="appType" class="label">App Type</label>
                             <select id="appType" name="appType" type="text" class="form-control dropdown-toggle"
@@ -210,6 +210,12 @@
                             <textarea class="form-control" id="comment" name="comment" rows="5"
                                       maxlength="100">{{comment}}</textarea>
                         </div>
+                        {{else}}
+                            <div class="form-group">
+                                <h4 class="text-info"><i class="fa fa-info"> The order status is: <span class="text-warning"> {{appStatus}}</span></i></h4>
+                                <input type="checkbox" name="enableEditing" value="enableEditing"><span class="text-danger"> Enable Editing</span>
+                            </div>
+                        {{/if}}
                     </form>
 
                     <div class="group">
