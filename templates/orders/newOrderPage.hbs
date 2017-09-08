@@ -4,7 +4,16 @@
         <div class="login-html new-order">
             <div class="login-form">
                 <h1>New Order</h1>
-                {{> newOrderForm}}
+                {{#if loggedIn}}
+                    {{> newOrderForm}}
+                {{else}}
+                    <h2 class="text-danger">"You are not logged in!"</h2>
+                    <div id="notLoggedIn">
+                        <a class="btn btn-primary btn-x1" href="#/login">Log In</a>
+                        <h3 class="text-danger">or</h3>
+                        <a class="btn btn-primary btn-x1" href="#/register">Register</a>
+                    </div>
+                {{/if}}
             </div>
         </div>
     </div>

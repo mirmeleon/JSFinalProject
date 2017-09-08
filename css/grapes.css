@@ -26,6 +26,13 @@
     padding-top: 20px;
     padding-bottom: 5px;
 }
+#notLoggedIn{
+    margin-top: 2.5em;
+}
+#notLoggedIn a, h3{
+    display: block;
+    text-align: center;
+}
 select.form-control#appType, select.form-control#appStatus, select.form-control#assignedTeam{
     height: calc(2.25rem + 8px);
 }
