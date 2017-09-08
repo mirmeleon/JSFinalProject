@@ -26,7 +26,8 @@ let auth = (() => {
     function register(username, password) {
         let userData = {
             username,
-            password
+            password,
+            role: 'user'
         };
         return remote.post('user', '', userData, 'basic');
 
@@ -37,7 +38,31 @@ let auth = (() => {
 
     }
 
+    function getId(){
+        if(isAuthed()){
+            return localStorage.getItem('id');
+        }
+
+        return undefined;
+    }
+
+    function getUsername(){
+        if(isAuthed()){
+            return localStorage.getItem('username');
+        }
+
+        return undefined;
+    }
+
+    function getRole(){
+        if(isAuthed()){
+            return localStorage.getItem('role');
+        }
+
+        return undefined
+    }
+
     return {
-        saveSession, login, register, logout, isAuthed
+        saveSession, login, register, logout, isAuthed, getId, getUsername, getRole
     }
 })();

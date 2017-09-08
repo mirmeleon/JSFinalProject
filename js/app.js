@@ -4,8 +4,8 @@ $(() => {
        this.use('Handlebars', 'hbs');
 
        //HOME PAGE
-       this.get('index.html', actionController.renderHome);
-       this.get('#/home', actionController.renderHome);
+        this.get('index.html', actionController.renderHome);
+        this.get('#/home', actionController.renderHome);
         //SERVICES
         this.get('#/services',actionController.renderServices);
         //LOGIN

@@ -85,13 +85,23 @@ let actionController = (()=>{
                     case 'Hybrid':
                         return 'fa fa-gears';
                 }
-
             }
+
             $('#ordersList').text('');
 
+            let query = 'orders'
+            let userRole = auth.getRole()
 
-            remote.get('appdata','orders','Kinvey')
+            if(userRole !== undefined && userRole == 'user'){
+                let userId = auth.getId();
+
+                query += '?query={"_acl.creator": "' + userId + '"}'
+                query += '&sort={"publishedDate": -1}'
+            }
+
+            remote.get('appdata', query, 'Kinvey')
                 .then(function (data) {
+                    console.log(data)
                     let orders = data.map(o => o = {isAdmin:ctx.isAdmin,deadLine:o.deadLine,teamName:o.teamName ,pubDate:o.publishedDate,name:o.name,_id:o._id,status:o.status,appIcon:getAppIcon(o.appType)});
                     let ordersToView = [];
                     function selectType() {
@@ -137,8 +147,8 @@ let actionController = (()=>{
                         pageCount = Math.ceil(ordersToView.length / 5)
 
                         pageButtonOn();
-
                     }
+
                     function pageButtonOn() {
 
                         if(currentPage===1){
@@ -174,8 +184,6 @@ let actionController = (()=>{
                     }
 
                     function showList(ordersList) {
-
-
 
                         Promise.all([$.get('templates/orders/order.hbs'),$.get("templates/orders/listOrders.hbs"),$.get("templates/orders/orderDetails.hbs")])
                             .then(function (response) {
