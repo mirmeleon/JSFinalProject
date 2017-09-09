@@ -508,6 +508,7 @@ let actionController = (()=>{
             appService.deleteOrder(orderId)
                 .then(function () {
                     notifications.success('The order', 'has been successfully deleted');
+
                     ctx.redirect('#/orders');
                 }).catch(function (reason) {
                 let errMessage = JSON.parse(reason.responseText).description;
@@ -515,8 +516,14 @@ let actionController = (()=>{
             })
         }
         else{
-            ctx.redirect('#/orders');
-            notifications.error(`No permissions:`, 'You are not Administrator!');
+            if(ctx.loggedIn()) {
+                notifications.error(`No permissions:`, 'You are not Administrator!');
+                ctx.redirect('#/orders');
+            }
+            else {
+                notifications.error(`Error:`, 'You are not logged in!');
+                ctx.redirect('#/login');
+            }
         }
     }
 
