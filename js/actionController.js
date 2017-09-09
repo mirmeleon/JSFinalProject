@@ -504,15 +504,20 @@ let actionController = (()=>{
         ctx.isAdmin = localStorage.getItem('role') === 'Admin';
 
         let orderId = ctx.params.id.substr(1);
-
-        appService.deleteOrder(orderId)
-            .then(function () {
-                notifications.success('The order', 'has been successfully deleted');
-                ctx.redirect('#/orders');
-            }).catch(function (reason) {
-            let errMessage = JSON.parse(reason.responseText).description;
-            notifications.error(`Error:`, `${errMessage}`);
-        })
+        if(ctx.isAdmin === true) {
+            appService.deleteOrder(orderId)
+                .then(function () {
+                    notifications.success('The order', 'has been successfully deleted');
+                    ctx.redirect('#/orders');
+                }).catch(function (reason) {
+                let errMessage = JSON.parse(reason.responseText).description;
+                notifications.error(`Error:`, `${errMessage}`);
+            })
+        }
+        else{
+            ctx.redirect('#/orders');
+            notifications.error(`No permissions:`, 'You are not Administrator!');
+        }
     }
 
     return {renderHome,
