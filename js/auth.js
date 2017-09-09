@@ -10,6 +10,10 @@ let auth = (() => {
         localStorage.setItem('authtoken', data._kmd.authtoken);
         //NEW Save role in session !!!
         localStorage.setItem('role',data.role)
+
+        if(data.role === 'teamMember'){
+            localStorage.setItem('team', data.team)
+        }
     }
 
     function login(username, password) {
@@ -62,7 +66,15 @@ let auth = (() => {
         return undefined
     }
 
+    function getTeam(){
+        if(isAuthed() && getRole() === 'teamMember'){
+            return localStorage.getItem('team');
+        }
+
+        return undefined
+    }
+
     return {
-        saveSession, login, register, logout, isAuthed, getId, getUsername, getRole
+        saveSession, login, register, logout, isAuthed, getId, getUsername, getRole, getTeam
     }
 })();

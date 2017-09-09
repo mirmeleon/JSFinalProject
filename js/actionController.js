@@ -3,7 +3,7 @@ let actionController = (()=>{
         ctx.loggedIn = auth.isAuthed;
         ctx.username = localStorage.getItem('username');
         ctx.isAdmin = localStorage.getItem('role') === 'Admin';
-
+        ctx.isTeamMember = auth.getRole() === 'teamMember'
 
         this.loadPartials({
             header:'./templates/common/header.hbs',
@@ -17,6 +17,7 @@ let actionController = (()=>{
         ctx.loggedIn = auth.isAuthed;
         ctx.username = localStorage.getItem('username');
         ctx.isAdmin = localStorage.getItem('role') === 'Admin';
+        ctx.isTeamMember = auth.getRole() === 'teamMember'
 
         this.loadPartials({
             header:'./templates/common/header.hbs',
@@ -37,9 +38,10 @@ let actionController = (()=>{
     }
     function renderOrders(ctx) {
         ctx.loggedIn = auth.isAuthed;
-        ctx.username = localStorage.getItem('username');
+        ctx.username = auth.getUsername()
         //Get role from localStorage
-        ctx.isAdmin = localStorage.getItem('role') === 'Admin';
+        ctx.isAdmin = auth.getRole() === 'Admin'
+        ctx.isTeamMember = auth.getRole() === 'teamMember'
         $(document).ajaxStart(showLoading);
         $(document).ajaxStop(hideLoading);
         ctx.loadPartials({
@@ -91,6 +93,27 @@ let actionController = (()=>{
 
             let query = 'orders'
             let userRole = auth.getRole()
+
+            //TODO: the query have a problem here, cannot load with multiple teams. Leaving some queries that I've tried
+
+            if(userRole !== undefined && userRole === 'teamMember'){
+                //?query={"and":[{"firstName":"James", "lastName":"Bond"}]}
+                //?query={"$or":[{"firstName":"James", "lastName":"Bond"}]}
+                // {'name': { $regex: '^searchString' }};
+                let teams = auth.getTeam();
+                query += '?query={"teamName": "' + teams + '"}'
+                //query += '?query={"$or":[{"teamName": "' + teams[0] + '"';
+
+                for (var i = 1; i < teams.length; i++) {
+                    //query += ', "teamName": "' + teams[i] + '"';
+                    //query += '|' + teams[i]
+
+                }
+
+                //query += '}]}'
+                //query += ')"}}'
+                //query = {'teamName': { $regex: '^' + regex }};
+            }
 
             if(userRole !== undefined && userRole == 'user'){
                 let userId = auth.getId();
@@ -417,6 +440,7 @@ let actionController = (()=>{
         ctx.loggedIn = auth.isAuthed;
         ctx.username = localStorage.getItem('username');
         ctx.isAdmin = localStorage.getItem('role') === 'Admin';
+        ctx.isTeamMember = auth.getRole() === 'teamMember'
 
         ctx.loadPartials({
             header:'./templates/common/header.hbs',
@@ -430,6 +454,7 @@ let actionController = (()=>{
         ctx.loggedIn = auth.isAuthed;
         ctx.username = localStorage.getItem('username');
         ctx.isAdmin = localStorage.getItem('role') === 'Admin';
+        ctx.isTeamMember = auth.getRole() === 'teamMember'
 
         ctx.loadPartials({
             header: './templates/common/header.hbs',

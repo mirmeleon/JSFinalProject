@@ -15,19 +15,26 @@
             {{#if loggedIn}}
                 {{#if isAdmin}}
                     <li class="nav-item">
-                        <a class="nav-link" href="#/orders" id="linkOrders">Orders</a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link" href="#/teams" id="linkTeams">Teams</a>
                     </li>
-                {{else}}
-                    <li class="nav-item">
-                        <a class="nav-link" href="#/orders" id="linkOrders">My Orders</a>
-                    </li>
                 {{/if}}
+
+                <li class="nav-item">
+                    <a class="nav-link" href="#/orders" id="linkOrders">
+                {{#if isAdmin}}
+                    Orders
+                {{else if isTeamMember}}
+                    Assigned Orders
+                {{else}}
+                    My Orders
+                {{/if}}
+                    </a>
+                </li>
+                {{#unless isTeamMember}}
                 <li class="nav-item">
                     <a class="nav-link" href="#/neworder" id="linkNewOrder">New Order</a>
                 </li>
+                {{/unless}}
             {{else}}
             <li class="nav-item">
                 <a class="nav-link" href="#/login" id="linkLogin">Login</a>
