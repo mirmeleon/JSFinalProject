@@ -34,9 +34,13 @@ let appService = (() => {
 
         return remote.update('appdata',`orders/${orderId}`, editOrderData, 'Kinvey')
     }
+    function deleteOrder(orderId) {
+        return remote.remove('appdata',`orders/${orderId}`, 'Kinvey')
+    }
     return {
         loadOrderDetails,
         createNewOrder,
-        editOrder
+        editOrder,
+        deleteOrder
     }
 })();

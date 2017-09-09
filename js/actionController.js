@@ -292,7 +292,6 @@ let actionController = (()=>{
         }
     }
     function renderOrderEdit(ctx) {
-        //TODO: to check if the order has been in progress. If it's entered in development can not be edited
         let orderId = ctx.params.id.substr(1);
         ctx.loggedIn = auth.isAuthed;
         ctx.username = localStorage.getItem('username');
@@ -340,7 +339,6 @@ let actionController = (()=>{
                 ctx.loadPartials({
                     header: './templates/common/header.hbs',
                     footer: './templates/common/footer.hbs',
-                    //editOrderForm: './templates/orders/editOrderFm.hbs'
                 }).then(function () {
                     this.partial('./templates/orders/editOrderPg.hbs')
                         .then(function () {
@@ -391,7 +389,6 @@ let actionController = (()=>{
             else teamName = ctx.teamName;
             */
 
-            //TODO: Check order is in production when Admin editing and disabled order details editselect..
             teamName = ctx.teamName;
             let publishedDate = ctx.publishedDate;
 
@@ -501,6 +498,22 @@ let actionController = (()=>{
             notifications.error(`Error:`,`${errMessage}`);
         })
     }
+    function actionDeleteOrder(ctx) {
+        ctx.loggedIn = auth.isAuthed;
+        ctx.username = localStorage.getItem('username');
+        ctx.isAdmin = localStorage.getItem('role') === 'Admin';
+
+        let orderId = ctx.params.id.substr(1);
+
+        appService.deleteOrder(orderId)
+            .then(function () {
+                notifications.success('The order', 'has been successfully deleted');
+                ctx.redirect('#/orders');
+            }).catch(function (reason) {
+            let errMessage = JSON.parse(reason.responseText).description;
+            notifications.error(`Error:`, `${errMessage}`);
+        })
+    }
 
     return {renderHome,
         renderServices,
@@ -513,6 +526,7 @@ let actionController = (()=>{
         renderTeams,
         actionNewOrder,
         renderNewOrder,
-        renderOrderEdit
+        renderOrderEdit,
+        actionDeleteOrder
     }
 })();

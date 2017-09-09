@@ -32,6 +32,8 @@ $(() => {
         this.get('#/neworder', actionController.renderNewOrder);
         //New Order Post
         this.post('#/neworder', actionController.actionNewOrder);
+        //Delete Order
+        this.get('#/delete/:id', actionController.actionDeleteOrder);
     });
 
     app.run();
