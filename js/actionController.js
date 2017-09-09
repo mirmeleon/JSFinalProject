@@ -207,11 +207,19 @@ let actionController = (()=>{
                                 var orderDetailsTemplete = Handlebars.compile(response[2]);
                                 var shown = true;
                                 $('.btnDetails').on("click", function() {
+                                        //Fix bug: In case that have opened ballon dont open second
+                                    if(!shown){
+                                        event.preventDefault();
+                                        return;
+                                        shown = true;
+                                    };
+
 
                                     let btn = this;
                                     $(btn).attr('id','shown')
                                     let orderId = $(btn).parent().parent().parent().attr('id');
                                     if(shown) {
+
                                         $($('.orderDetails').parent()).attr('class','')
                                         let currentOrder = data.filter(o=>o._id === orderId)[0];
 
@@ -240,7 +248,10 @@ let actionController = (()=>{
                                         });
 
                                         $(document).click(function () {
-                                            if(!$(event.target).is(btn)){
+
+
+                                            if(!$(event.target).is(btn) ){
+
                                                 $($('.orderDetails').parent()).attr('class','animated zoomOutUp');
                                                 $(btn).hideBalloon();
 
