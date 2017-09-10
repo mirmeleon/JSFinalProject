@@ -30,6 +30,11 @@ let util = (()=>{
         }
     }
 
-    return {formatDate,calcTime}
+    //sanitaize
+    function cleanForm(html){
+        return $($.parseHTML(html)).text();
+    }
+
+    return {formatDate,calcTime, cleanForm}
 
 })();

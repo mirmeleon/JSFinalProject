@@ -1,6 +1,6 @@
 let actionController = (()=>{
     function renderHome(ctx) {
-        ctx.loggedIn = auth.isAuthed;
+        ctx.loggedIn = auth.isAuthed();
         ctx.username = localStorage.getItem('username');
         ctx.isAdmin = localStorage.getItem('role') === 'Admin';
         ctx.isTeamMember = auth.getRole() === 'teamMember'
@@ -14,7 +14,7 @@ let actionController = (()=>{
         });
     }
     function renderServices(ctx) {
-        ctx.loggedIn = auth.isAuthed;
+        ctx.loggedIn = auth.isAuthed();
         ctx.username = localStorage.getItem('username');
         ctx.isAdmin = localStorage.getItem('role') === 'Admin';
         ctx.isTeamMember = auth.getRole() === 'teamMember'
@@ -37,11 +37,14 @@ let actionController = (()=>{
         });
     }
     function renderOrders(ctx) {
-        ctx.loggedIn = auth.isAuthed;
-        ctx.username = auth.getUsername()
+        ctx.loggedIn = auth.isAuthed();
+        if(!ctx.loggedIn){
+            ctx.redirect('#/login');
+        }
+        ctx.username = auth.getUsername();
         //Get role from localStorage
-        ctx.isAdmin = auth.getRole() === 'Admin'
-        ctx.isTeamMember = auth.getRole() === 'teamMember'
+        ctx.isAdmin = auth.getRole() === 'Admin';
+        ctx.isTeamMember = auth.getRole() === 'teamMember';
         $(document).ajaxStart(showLoading);
         $(document).ajaxStop(hideLoading);
         ctx.loadPartials({
@@ -91,8 +94,8 @@ let actionController = (()=>{
 
             $('#ordersList').text('');
 
-            let query = 'orders'
-            let userRole = auth.getRole()
+            let query = 'orders';
+            let userRole = auth.getRole();
 
             //TODO: the query have a problem here, cannot load with multiple teams. Leaving some queries that I've tried
 
@@ -124,7 +127,7 @@ let actionController = (()=>{
 
             remote.get('appdata', query, 'Kinvey')
                 .then(function (data) {
-                    console.log(data)
+                    //console.log(data)
                     let orders = data.map(o => o = {isAdmin:ctx.isAdmin,deadLine:o.deadLine,teamName:o.teamName ,pubDate:o.publishedDate,name:o.name,_id:o._id,status:o.status,appIcon:getAppIcon(o.appType)});
                     let ordersToView = [];
                     function selectType() {
@@ -136,7 +139,7 @@ let actionController = (()=>{
                             })
                         }
                     }
-                    selectType()
+                    selectType();
                     function orderOrdersList() {
                         if(orderByCriteria === 'DeadLine'){
                             ordersToView.sort(function (a,b) {
@@ -159,15 +162,15 @@ let actionController = (()=>{
                             })
                         }
                     }
-                    orderOrdersList()
+                    orderOrdersList();
                     let currentPage = 1;
                     let pageCount = 1;
-                    $('#pagenationNext').unbind()
-                    $('#pagenationPrevious').unbind()
-                    $('#pagenationNext').click(nextOrders)
-                    $('#pagenationPrevious').click(priviousOrders)
+                    $('#pagenationNext').unbind();
+                    $('#pagenationPrevious').unbind();
+                    $('#pagenationNext').click(nextOrders);
+                    $('#pagenationPrevious').click(priviousOrders);
                     if(ordersToView.length > 5) {
-                        pageCount = Math.ceil(ordersToView.length / 5)
+                        pageCount = Math.ceil(ordersToView.length / 5);
 
                         pageButtonOn();
                     }
@@ -175,24 +178,24 @@ let actionController = (()=>{
                     function pageButtonOn() {
 
                         if(currentPage===1){
-                            $('#pagenationNext').parent().removeClass('disabled')
-                            $('#pagenationPrevious').parent().addClass('disabled')
+                            $('#pagenationNext').parent().removeClass('disabled');
+                            $('#pagenationPrevious').parent().addClass('disabled');
                         }
                         else if(currentPage === pageCount){
-                            $('#pagenationNext').parent().addClass('disabled')
+                            $('#pagenationNext').parent().addClass('disabled');
                             $('#pagenationPrevious').parent().removeClass('disabled')
                         }
                         else{
-                            $('#pagenationNext').parent().removeClass('disabled')
+                            $('#pagenationNext').parent().removeClass('disabled');
                             $('#pagenationPrevious').parent().removeClass('disabled')
                         }
                     }
                     function nextOrders() {
                         event.preventDefault();
-                        $('#ordersList').text('')
+                        $('#ordersList').text('');
                         currentPage++;
-                        console.log(ordersToView)
-                        showList(getListPart(ordersToView,currentPage))
+                        console.log(ordersToView);
+                        showList(getListPart(ordersToView,currentPage));
 
                         pageButtonOn();
                     }
@@ -327,7 +330,10 @@ let actionController = (()=>{
     }
     function renderOrderEdit(ctx) {
         let orderId = ctx.params.id.substr(1);
-        ctx.loggedIn = auth.isAuthed;
+        ctx.loggedIn = auth.isAuthed();
+        if(!ctx.loggedIn){
+            ctx.redirect('#/login');
+        }
         ctx.username = localStorage.getItem('username');
         ctx.isTeamMember = localStorage.getItem('role') === 'teamMember';
         ctx.isAdmin = localStorage.getItem('role') === 'Admin';
@@ -394,22 +400,22 @@ let actionController = (()=>{
             let name, appType, pageCount, functionality, deadline, comment, designElements, status, teamName;
 
             if(ctx.isAuthor || ctx.isAdmin) name = $('#nameOfApp').val();
-            else name = ctx.nameOfApp;
+            else name = util.cleanForm(ctx.nameOfApp);
 
             if(ctx.isAuthor || ctx.isAdmin) appType = $('#appType').val();
             else appType = ctx.appType;
 
             if(ctx.isAuthor || ctx.isAdmin) pageCount = $('#numberOfPage').val();
-            else pageCount = ctx.pageCount;
+            else pageCount = util.cleanForm(ctx.pageCount);
 
             if(ctx.isAuthor || ctx.isAdmin) functionality = $('#functionality').val();
-            else functionality = ctx.functionality;
+            else functionality = util.cleanForm(ctx.functionality);
 
             if(ctx.isAuthor || ctx.isAdmin) deadline = $('#deadline').val();
             else deadline = ctx.deadline;
 
             if(ctx.isAuthor || ctx.isAdmin)comment = $('#comment').text();
-            else comment = ctx.comment;
+            else comment = util.cleanForm(ctx.comment);
 
             if (ctx.isAuthor || ctx.isAdmin) designElements = $("input[type='radio'][name='designElements']:checked").val();
             else designElements = ctx.appType;
@@ -437,7 +443,10 @@ let actionController = (()=>{
         }
     }
     function renderNewOrder(ctx) {
-        ctx.loggedIn = auth.isAuthed;
+        ctx.loggedIn = auth.isAuthed();
+        if(!ctx.loggedIn){
+            ctx.redirect('#/login');
+        }
         ctx.username = localStorage.getItem('username');
         ctx.isAdmin = localStorage.getItem('role') === 'Admin';
         ctx.isTeamMember = auth.getRole() === 'teamMember'
@@ -451,7 +460,10 @@ let actionController = (()=>{
         });
     }
     function renderTeams(ctx) {
-        ctx.loggedIn = auth.isAuthed;
+        ctx.loggedIn = auth.isAuthed();
+        if(!ctx.loggedIn){
+            ctx.redirect('#/login');
+        }
         ctx.username = localStorage.getItem('username');
         ctx.isAdmin = localStorage.getItem('role') === 'Admin';
         ctx.isTeamMember = auth.getRole() === 'teamMember'
@@ -473,8 +485,16 @@ let actionController = (()=>{
         });
     }
     function actionLogin(ctx) {
-        let username = ctx.params.user;
-        let password = ctx.params.pass;
+        let username = util.cleanForm(ctx.params.user);
+        let password = util.cleanForm(ctx.params.pass);
+
+        if(username === ""){
+            notifications.warning("username", `can't be empty!`)
+        }
+
+        if(password === ""){
+            notifications.warning("password", "can't be empty!")
+        }
 
         auth.login(username, password)
             .then(function(userInfo){
@@ -487,9 +507,18 @@ let actionController = (()=>{
             notifications.error(`Error:`,`${errMessage}`);
         })
     }
+
     function actionRegister(ctx) {
-        let username = ctx.params.username;
-        let pass = ctx.params.passwd;
+        let username = util.cleanForm(ctx.params.username);
+        let pass = util.cleanForm(ctx.params.passwd);
+
+        if(username === ""){
+            notifications.warning("username", `can't be empty!`)
+        }
+
+        if(pass === ""){
+            notifications.warning("password", "can't be empty!")
+        }
 
         auth.register(username, pass)
             .then(function(userInfo){
@@ -513,26 +542,35 @@ let actionController = (()=>{
         });
     }
     function actionNewOrder(ctx) {
-        if(auth.isAuthed){
+        if(!auth.isAuthed){
             ctx.redirect('#/register');
         }
-        let name = ctx.params.nameOfApp;
+        let name = util.cleanForm(ctx.params.nameOfApp);
         let appType = ctx.params.appType;
-        let comment = ctx.params.comment;
-        let deadline = ctx.params.deadline;
+        let comment = util.cleanForm(ctx.params.comment);
+        let deadline = util.cleanForm(ctx.params.deadline);
         let designElements = ctx.params.designElements;
-        let functionality = ctx.params.functionality;
-        let pageCount = ctx.params.pageCount;
+        let functionality = util.cleanForm(ctx.params.functionality);
+        let pageCount = util.cleanForm(ctx.params.pageCount);
         let publishedDate = new Date();
 
-        appService.createNewOrder(name, appType, comment, deadline, designElements, functionality, pageCount, publishedDate)
-            .then(function () {
-                notifications.success(`Order ${name}`,`created successfull`);
-                ctx.redirect('#/orders');
-            }).catch(function (reason) {
-            let errMessage = JSON.parse(reason.responseText).description;
-            notifications.error(`Error:`,`${errMessage}`);
-        })
+        if(name === ""){
+            notifications.warning("Name", "can't be empty!");
+        } else if(pageCount <= 0){
+            notifications.warning("Pages", "can't be 0 or less then 0")
+        } else if(functionality === ""){
+            notifications.warning("Functionality", "can't be empty!");
+        } else {
+            appService.createNewOrder(name, appType, comment, deadline, designElements, functionality, pageCount, publishedDate)
+                .then(function () {
+                    notifications.success(`Order ${name}`,`created successfull`);
+                    ctx.redirect('#/orders');
+                }).catch(function (reason) {
+                let errMessage = JSON.parse(reason.responseText).description;
+                notifications.error(`Error:`,`${errMessage}`);
+            })
+        }
+
     }
     function actionDeleteOrder(ctx) {
         ctx.loggedIn = auth.isAuthed;
