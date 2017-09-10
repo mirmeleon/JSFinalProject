@@ -9,6 +9,18 @@ body{
 .clearfix:after{clear:both;display:block}
 a{color:inherit;text-decoration:none}
 
+.profile-wrap{
+	width:100%;
+	margin:auto;
+	max-width:625px;
+	min-height:600px;
+	position:relative;
+	background-image:url("../img/login.jpg");
+	background-repeat: no-repeat;
+	background-position: center;
+	box-shadow:0 12px 15px 0 rgba(0,0,0,.24),0 17px 50px 0 rgba(0,0,0,.19);
+}
+
 .login-wrap{
 	width:100%;
 	margin:auto;
@@ -20,6 +32,15 @@ a{color:inherit;text-decoration:none}
 	background-position: center;
 	box-shadow:0 12px 15px 0 rgba(0,0,0,.24),0 17px 50px 0 rgba(0,0,0,.19);
 }
+
+.profile-html{
+	width:100%;
+	height:100%;
+	position:absolute;
+	padding:90px 70px 50px 70px;
+	background:rgba(94,37,25,.9);
+}
+
 .login-html{
 	width:100%;
 	height:100%;

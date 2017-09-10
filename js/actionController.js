@@ -484,6 +484,66 @@ let actionController = (()=>{
             this.partial('./templates/register/register.hbs');
         });
     }
+    function renderProfile(ctx) {
+
+        remote.get('user', auth.getId(), 'kinvey')
+            .then(function(data){
+                if(auth.getRole() === 'user'){
+                    let query = 'orders?query={"_acl.creator": "' + auth.getId() + '"}'
+                    let orders = remote.get('appdata', query , 'kinvey', true).responseJSON
+                    let count = 0
+
+                    for (var i = 0; i < orders.length; i++) {
+                        if(orders[i].status === 'Finished'){
+                            count++;
+                        }
+                    }
+
+                    ctx.ordersRequested = orders.length;
+                    ctx.ordersFinished = count;
+                }
+
+                ctx.loggedIn = auth.isAuthed;
+                ctx.username = auth.getUsername()
+                ctx.isAdmin = auth.getRole() === 'Admin'
+                ctx.isUser = auth.getRole() === 'user'
+                ctx.ddsNumber = data.ddsNumber || "<em class='missingInput'>Please add you DDS Number</em>";
+                ctx.addressInfo = data.address || "<em class='missingInput'>Please add your address</em>";
+                ctx.townInfo = data.town || "<em class='missingInput'>Please add your town</em>";
+                ctx.countryInfo = data.country || "<em class='missingInput'>Please add your country</em>";
+                ctx.companyName = data.companyName || "<em class='missingInput'>Please add your company name</em>";
+
+                ctx.loadPartials({
+                    header:'./templates/common/header.hbs',
+                    footer:'./templates/common/footer.hbs'
+                }).then(function(){
+                    this.partial('./templates/profile/profile.hbs');
+                });
+            }).catch()
+
+    }
+    function renderEditProfile(ctx) {
+        remote.get('user', auth.getId(), 'kinvey')
+            .then(function(data){
+                ctx.loggedIn = auth.isAuthed;
+                ctx.username = auth.getUsername()
+                ctx.isAdmin = auth.getRole() === 'Admin'
+                ctx.isUser = auth.getRole() === 'user'
+                ctx.ddsNumber = data.ddsNumber || ""
+                ctx.addressInfo = data.address || ""
+                ctx.townInfo = data.town || ""
+                ctx.countryInfo = data.country || ""
+                ctx.companyName = data.companyName || ""
+
+                ctx.loadPartials({
+                    header:'./templates/common/header.hbs',
+                    footer:'./templates/common/footer.hbs'
+                }).then(function(){
+                    this.partial('./templates/profile/editProfile.hbs');
+                });
+            }).catch(function(err){console.log(err)})
+    }
+
     function actionLogin(ctx) {
         let username = util.cleanForm(ctx.params.user);
         let password = util.cleanForm(ctx.params.pass);
@@ -600,19 +660,39 @@ let actionController = (()=>{
             }
         }
     }
+    function actionUpdateProfile(ctx) {
+        let data = {
+            country: ctx.params.countryInfo,
+            town: ctx.params.townInfo,
+            address: ctx.params.addressInfo,
+            ddsNumber: ctx.params.ddsNumber,
+            companyName: ctx.params.companyName,
+            role: auth.getRole()
+        }
 
-    return {renderHome,
+        remote.update('user', auth.getId(), data, 'kinvey')
+            .then(function(data){
+                ctx.redirect("#/profile")
+            }).catch(function(err){console.log(err)})
+    }
+
+    return {
+        renderHome,
         renderServices,
         renderLogin,
+        renderOrders,
+        renderOrderEdit,
+        renderNewOrder,
+        renderTeams,
         renderRegister,
+        renderProfile,
+        renderEditProfile,
+
         actionLogin,
         actionRegister,
         actionLogout,
-        renderOrders,
-        renderTeams,
         actionNewOrder,
-        renderNewOrder,
-        renderOrderEdit,
-        actionDeleteOrder
+        actionDeleteOrder,
+        actionUpdateProfile
     }
 })();

@@ -1,0 +1,41 @@
+{{> header}}
+<section id="profile">
+    <div class="profile-wrap">
+        <div class="profile-html">
+            <form action="#/updateProfile" method="POST">
+                <h2>Edit Profile</h2>
+                <br/>
+                <div class="group field">
+                    <label for="inputCompanyName" class="label">Company Name:</label>
+                    <input id="inputCompanyName" name="companyName" type="text" class="input" value="{{companyName}}">
+                </div>
+
+                <div class="group field">
+                    <label for="inputTownInfo" class="label">Town:</label>
+                    <input id="inputTownInfo" name="townInfo" type="text" class="input" value="{{townInfo}}">
+
+                </div>
+
+                <div class="group field">
+                    <label for="inputAddressInfo" class="label">Address:</label>
+                    <textarea rows="4" cols="50" id="inputAddressInfo" name="addressInfo">{{addressInfo}}</textarea>
+                </div>
+
+                <div class="group field">
+                    <label id="inputCountryInfo" class="label">Country:</label>
+                    <input id="inputCountryInfo" name="countryInfo" type="text" class="input" value="{{countryInfo}}">
+                </div>
+
+                {{#if isUser}}
+                <div class="group field">
+                    <label id="inputDdsNumber" class="label">DDS Number:</label>
+                    <input id="inputDdsNumber" name="ddsNumber" type="text" class="input" value="{{ddsNumber}}">
+                </div>
+                {{/if}}
+                <br/>
+                <input type="submit" class="btn btn-primary btn-xl" value="Update">
+            </form>
+        </div>
+    </div>
+</section>
+{{> footer}}
