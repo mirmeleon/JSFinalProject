@@ -5,8 +5,10 @@ Final course projects - JS Applications
 <hr>
 <h2>Topic: Orders system</h2>
 <hr>
-<h3>Individual tasks:</h3>
-<div>\\Todo:</div>
+<h3>Documentation</h3>
+ Check our <a href="https://github.com/mirmeleon/JSFinalProject/wiki" target="_blank">wiki</a>
+
+
 
 <h4>Team members:</h4>
 <Ul>
