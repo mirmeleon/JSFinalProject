@@ -1,0 +1,49 @@
+{{> header}}
+<section id="profile">
+    <div class="profile-wrap">
+        <div class="profile-html">
+            <h2>Profile</h2>
+            <br/>
+            <div class="group field">
+                <label for="companyName" class="label">Company Name:</label>
+                <label id="companyName" class="label">{{{companyName}}}</label>
+            </div>
+
+            <div class="group field">
+                <label class="label">Town:</label>
+                <label class="label">{{{townInfo}}}</label>
+            </div>
+
+            <div class="group field">
+                <label class="label">Address:</label>
+                <label class="label">{{{addressInfo}}}</label>
+            </div>
+
+            <div class="group field">
+                <label class="label">Country:</label>
+                <label class="label">{{{countryInfo}}}</label>
+            </div>
+
+            {{#if isUser}}
+            <div class="group field">
+                <label class="label">DDS Number:</label>
+                <label class="label">{{{ddsNumber}}}</label>
+            </div>
+            <hr/>
+
+            <div class="group field">
+            <label class="label">Orders Requested:</label>
+            <label class="label">{{{ordersRequested}}}</label>
+            </div>
+            <div class="group field">
+                <label class="label">Orders Finished:</label>
+                <label class="label">{{{ordersFinished}}}</label>
+            </div>
+
+            {{/if}}
+            <br/>
+            <a href="#/editProfile" class="btn btn-primary btn-xl">Edit Profile</a>
+        </div>
+    </div>
+</section>
+{{> footer}}

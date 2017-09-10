@@ -44,7 +44,7 @@ select.form-control#appType, select.form-control#appStatus, select.form-control#
     font-size:48px;
     color:black
 }
-.order{
+.order, .field{
 
     margin: 5px;
 }
@@ -62,10 +62,18 @@ select.form-control#appType, select.form-control#appStatus, select.form-control#
 
 }
 #login{
+     background: #3a6186; /* fallback for old browsers */
+     background: -webkit-linear-gradient(to left, #3a6186 , #89253e); /* Chrome 10-25, Safari 5.1-6 */
+     background: linear-gradient(to left, #3a6186 , #89253e); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+ }
+
+#profile{
     background: #3a6186; /* fallback for old browsers */
     background: -webkit-linear-gradient(to left, #3a6186 , #89253e); /* Chrome 10-25, Safari 5.1-6 */
     background: linear-gradient(to left, #3a6186 , #89253e); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
+
+
 .ordersPage{
     background: #3a6186;
     background: -webkit-linear-gradient(to left, #3a6186 , #89253e); /* Chrome 10-25, Safari 5.1-6 */
@@ -203,6 +211,9 @@ textarea.form-control {
     width: 150px;
     background-color: transparent;
     color: #fff;
+}
 
+.missingInput{
+    color: #89253e;
 }
 

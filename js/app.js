@@ -7,11 +7,11 @@ $(() => {
         this.get('index.html', actionController.renderHome);
         this.get('#/home', actionController.renderHome);
         //SERVICES
-        this.get('#/services',actionController.renderServices);
+        this.get('#/services', actionController.renderServices);
         //LOGIN
-        this.get('#/login',actionController.renderLogin);
+        this.get('#/login', actionController.renderLogin);
         //Login Post
-        this.post('#/login',actionController.actionLogin);
+        this.post('#/login', actionController.actionLogin);
         //REGISTER
         this.get('#/register', actionController.renderRegister);
         //Register Post
@@ -34,8 +34,14 @@ $(() => {
         this.post('#/neworder', actionController.actionNewOrder);
         //Delete Order
         this.get('#/delete/:id', actionController.actionDeleteOrder);
+        //Profile
+        this.get('#/profile', actionController.renderProfile);
+        //Edit Profile Get
+        this.get('#/editProfile', actionController.renderEditProfile);
+        //Edit Profile Post
+        this.post('#/updateProfile', actionController.actionUpdateProfile);
+
     });
 
     app.run();
-
 });

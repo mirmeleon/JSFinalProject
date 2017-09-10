@@ -8,37 +8,42 @@ let remote = (() => {
         else return 'Kinvey ' + localStorage.getItem('authtoken');
     }
 
-    function makeRequest(method, module, url, auth) {
-        return req = {
+    function makeRequest(method, module, url, auth, isSync) {
+         let req = {
             url: baseUrl + module + '/' + appKey + '/' + url,
             method,
             headers: {
                 'Authorization': makeAuth(auth)
-            }
-        };
+            }};
+
+         if(isSync === true){
+             req.async = false;
+         }
+
+        return req
     }
 
-    function get(module, url, auth) {
-        return $.ajax(makeRequest('GET', module, url, auth));
+    function get(module, url, auth, isSync) {
+        return $.ajax(makeRequest('GET', module, url, auth, isSync));
     }
 
-    function post(module, url, data, auth) {
+    function post(module, url, data, auth, isSync) {
 
-        let req = makeRequest('POST', module, url, auth);
+        let req = makeRequest('POST', module, url, auth, isSync);
         req.data = JSON.stringify(data);
         req.headers['Content-Type'] = 'application/json';
         return $.ajax(req);
     }
 
-    function update(module, url, data, auth) {
-        let req = makeRequest('PUT', module, url, auth);
+    function update(module, url, data, auth, isSync) {
+        let req = makeRequest('PUT', module, url, auth, isSync);
         req.data = JSON.stringify(data);
         req.headers['Content-Type'] = 'application/json';
         return $.ajax(req);
     }
 
-    function remove(module, url, auth) {
-        return $.ajax(makeRequest('DELETE', module, url, auth));
+    function remove(module, url, auth, isSync) {
+        return $.ajax(makeRequest('DELETE', module, url, auth, isSync));
     }
 
     return {
