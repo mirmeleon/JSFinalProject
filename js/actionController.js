@@ -485,7 +485,11 @@ let actionController = (()=>{
         });
     }
     function renderProfile(ctx) {
-
+        ctx.loggedIn = auth.isAuthed();
+        if(!ctx.loggedIn){
+            console.log('tuk');
+            ctx.redirect('#/login');
+        }
         remote.get('user', auth.getId(), 'kinvey')
             .then(function(data){
                 if(auth.getRole() === 'user'){
@@ -503,15 +507,14 @@ let actionController = (()=>{
                     ctx.ordersFinished = count;
                 }
 
-                ctx.loggedIn = auth.isAuthed;
                 ctx.username = auth.getUsername()
                 ctx.isAdmin = auth.getRole() === 'Admin'
                 ctx.isUser = auth.getRole() === 'user'
-                ctx.ddsNumber = data.ddsNumber || "<em class='missingInput'>Please add you DDS Number</em>";
-                ctx.addressInfo = data.address || "<em class='missingInput'>Please add your address</em>";
-                ctx.townInfo = data.town || "<em class='missingInput'>Please add your town</em>";
-                ctx.countryInfo = data.country || "<em class='missingInput'>Please add your country</em>";
-                ctx.companyName = data.companyName || "<em class='missingInput'>Please add your company name</em>";
+                ctx.ddsNumber = util.cleanForm(data.ddsNumber) || "<em class='missingInput'>Please add you DDS Number</em>";
+                ctx.addressInfo =  util.cleanForm(data.address) || "<em class='missingInput'>Please add your address</em>";
+                ctx.townInfo =  util.cleanForm(data.town) || "<em class='missingInput'>Please add your town</em>";
+                ctx.countryInfo =  util.cleanForm(data.country) || "<em class='missingInput'>Please add your country</em>";
+                ctx.companyName =  util.cleanForm(data.companyName) || "<em class='missingInput'>Please add your company name</em>";
 
                 ctx.loadPartials({
                     header:'./templates/common/header.hbs',
