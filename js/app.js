@@ -42,6 +42,8 @@ $(() => {
         this.post('#/updateProfile', actionController.actionUpdateProfile);
         //Create Team
         this.get('#/newTeam',actionController.renderNewTeam);
+        //Roles
+        this.get('#/roles', actionController.renderRoles);
     });
 
     app.run();

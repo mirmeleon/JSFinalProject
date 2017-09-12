@@ -459,6 +459,24 @@ let actionController = (()=>{
             this.partial('./templates/orders/newOrderPage.hbs');
         });
     }
+    function renderRoles(ctx) {
+        ctx.loggedIn = auth.isAuthed();
+        if(!ctx.loggedIn){
+            ctx.redirect('#/login');
+        }
+        ctx.username = localStorage.getItem('username');
+        ctx.isAdmin = localStorage.getItem('role') === 'Admin';
+        ctx.isTeamMember = auth.getRole() === 'teamMember';
+
+
+        ctx.loadPartials({
+            header: './templates/common/header.hbs',
+            footer: './templates/common/footer.hbs'
+        }).then(function () {
+            this.partial('./templates/roles/roles.hbs')
+        });
+
+    }
     function renderTeams(ctx) {
         ctx.loggedIn = auth.isAuthed();
         if(!ctx.loggedIn){
@@ -473,11 +491,8 @@ let actionController = (()=>{
         //    console.log(usersInfo.filter(usersInfo => usersInfo.role === 'teamMember'));
         //});
         teamService.loadTeams().then(function (teams) {
-            let allTeams = [];
-            for (let i = 0; i < teams.length; i++) {
-                allTeams.push(teams[i].name);
-            }
-            ctx.teamsName = allTeams.join('\n');
+
+            ctx.teams=teams;
 
             ctx.loadPartials({
                 header: './templates/common/header.hbs',
@@ -491,13 +506,12 @@ let actionController = (()=>{
                 console.log(userDetails);
             });
 
-            console.log(teams[0].name);
+            console.log(teams[0].orderId);
+            appService.loadOrderDetails(teams[0].orderId).then(function (orderDetails) {
+                console.log(orderDetails.name);
+            });
             teamId = teams[0]._id;
-        })
-
-       teamService.loadTeamMembers().then(function (teamMembers) {
-           //console.log(teamMembers);
-       })
+        });
 
     }
     function renderNewTeam(ctx) {
@@ -773,6 +787,7 @@ let actionController = (()=>{
         renderProfile,
         renderEditProfile,
         renderNewTeam,
+        renderRoles,
 
         actionLogin,
         actionRegister,

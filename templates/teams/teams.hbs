@@ -5,10 +5,11 @@
             <div class="login-form">
                 <h1>All Teams</h1>
                 <form class="form-group">
-                    <div class="form-group">
-                        <label for="teams">Teams</label>
-                        <textarea class="form-control" id="teams" name="comment" rows="5">{{teamsName}}</textarea>
-                    </div>
+                    {{#each teams}}
+                        <div class="group">
+                            <h3 class="teamName">{{name}}</h3><input type="submit" id="" class="button btn-info" value="Details">
+                        </div>
+                    {{/each}}
                 </form>
             </div>
         </div>
