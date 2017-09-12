@@ -4,6 +4,11 @@
         <div class="login-html new-order">
             <div class="login-form">
                 <h1>Roles Management</h1>
+                <div class="form-group">
+                    {{#each allUsers}}
+                    For user: <label class="text-info">{{username}}</label> role is <span class="text-info">{{role}}</span><br>
+                    {{/each}}
+                </div>
             </div>
         </div>
     </div>

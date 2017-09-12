@@ -468,12 +468,17 @@ let actionController = (()=>{
         ctx.isAdmin = localStorage.getItem('role') === 'Admin';
         ctx.isTeamMember = auth.getRole() === 'teamMember';
 
+        teamService.loadAllUsers().then(function (allUsers) {
+            console.log(allUsers);
+            ctx.allUsers = allUsers;
 
-        ctx.loadPartials({
-            header: './templates/common/header.hbs',
-            footer: './templates/common/footer.hbs'
-        }).then(function () {
-            this.partial('./templates/roles/roles.hbs')
+
+            ctx.loadPartials({
+                header: './templates/common/header.hbs',
+                footer: './templates/common/footer.hbs'
+            }).then(function () {
+                this.partial('./templates/roles/roles.hbs')
+            });
         });
 
     }
