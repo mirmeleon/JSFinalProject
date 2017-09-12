@@ -14,8 +14,12 @@
             </li>
             {{#if loggedIn}}
                 {{#if isAdmin}}
-                    <li class="nav-item">
-                        <a class="nav-link" href="#/teams" id="linkTeams">Teams</a>
+                    <li class="dropdown nav-item profilLink">
+                        <a class="dropdown-toggle nav-link" data-toggle="dropdown">Teams<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a  href="#/teams">All Teams</a></li>
+                            <li><a href="#/newTeam">New Team</a></li>
+                        </ul>
                     </li>
                 {{/if}}
 
@@ -47,7 +51,7 @@
             {{#if loggedIn}}
 
                 <li class="dropdown nav-item profilLink">
-                    <a href=""  class="dropdown-toggle nav-link" data-toggle="dropdown">Hello, {{username}}
+                    <a class="dropdown-toggle nav-link" data-toggle="dropdown">Hello, {{username}}
                         <span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="#/profile">Profile</a></li>

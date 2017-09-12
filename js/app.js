@@ -40,7 +40,8 @@ $(() => {
         this.get('#/editProfile', actionController.renderEditProfile);
         //Edit Profile Post
         this.post('#/updateProfile', actionController.actionUpdateProfile);
-
+        //Create Team
+        this.get('#/newTeam',actionController.renderNewTeam);
     });
 
     app.run();

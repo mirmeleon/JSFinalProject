@@ -13,9 +13,8 @@ let teamService = (() => {
         return remote.get('appdata', 'teams/' + teamId, 'Kinvey');
     }
 
-    function createTeam(name, memberId, orderId) {
+    function createTeam(name, memberId) {
         let teamData = {
-            orderId: orderId,
             memberId: memberId,
             name: name
         };

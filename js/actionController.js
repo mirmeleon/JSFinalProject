@@ -449,7 +449,7 @@ let actionController = (()=>{
         }
         ctx.username = localStorage.getItem('username');
         ctx.isAdmin = localStorage.getItem('role') === 'Admin';
-        ctx.isTeamMember = auth.getRole() === 'teamMember'
+        ctx.isTeamMember = auth.getRole() === 'teamMember';
 
         ctx.loadPartials({
             header:'./templates/common/header.hbs',
@@ -466,15 +466,97 @@ let actionController = (()=>{
         }
         ctx.username = localStorage.getItem('username');
         ctx.isAdmin = localStorage.getItem('role') === 'Admin';
-        ctx.isTeamMember = auth.getRole() === 'teamMember'
+        ctx.isTeamMember = auth.getRole() === 'teamMember';
 
-        ctx.loadPartials({
-            header: './templates/common/header.hbs',
-            footer: './templates/common/footer.hbs'
-        }).then(function () {
-            this.partial('./templates/teams/teams.hbs')
+        //teamService.loadAllUsers().then(function (usersInfo) {
+            //load only teamMembers
+        //    console.log(usersInfo.filter(usersInfo => usersInfo.role === 'teamMember'));
+        //});
+        teamService.loadTeams().then(function (teams) {
+            let allTeams = [];
+            for (let i = 0; i < teams.length; i++) {
+                allTeams.push(teams[i].name);
+            }
+            ctx.teamsName = allTeams.join('\n');
+
+            ctx.loadPartials({
+                header: './templates/common/header.hbs',
+                footer: './templates/common/footer.hbs'
+            }).then(function () {
+                this.partial('./templates/teams/teams.hbs')
+            });
+
+            let firstTeamMember = teams[0].memberId[0];
+            remote.get('user', firstTeamMember, 'kinvey').then(function (userDetails) {
+                console.log(userDetails);
+            });
+
+            console.log(teams[0].name);
+            teamId = teams[0]._id;
         })
 
+       teamService.loadTeamMembers().then(function (teamMembers) {
+           //console.log(teamMembers);
+       })
+
+    }
+    function renderNewTeam(ctx) {
+        ctx.loggedIn = auth.isAuthed();
+        if(!ctx.loggedIn){
+            ctx.redirect('#/login');
+        }
+        ctx.username = localStorage.getItem('username');
+        ctx.isAdmin = localStorage.getItem('role') === 'Admin';
+        ctx.isTeamMember = auth.getRole() === 'teamMember';
+        teamService.loadTeamMembers()
+            .then(function (teamMembersDetails) {
+            console.log(teamMembersDetails);
+            let allTeamMembers = [];
+            for (let i = 0; i < teamMembersDetails.length; i++) {
+                allTeamMembers.push(teamMembersDetails[i].username);
+            }
+            ctx.teamMembers = allTeamMembers.join('\n');
+
+            ctx.teamMembers = teamMembersDetails;
+
+            ctx.loadPartials({
+                header: './templates/common/header.hbs',
+                footer: './templates/common/footer.hbs'
+            }).then(function () {
+                this.partial('./templates/teams/newTeam.hbs')
+                    .then(function () {
+                        $('#newTeamBtn').click(actionNewTeam);
+                    });
+
+            })
+        }).catch(function (reason) {
+            let errMessage = JSON.parse(reason.responseText).description;
+            notifications.error(`Error:`, `${errMessage}`);
+        });
+
+        function actionNewTeam() {
+
+            let name = $('#teamName').val();
+            let members = [];
+
+            $.each($("input[name='teamMember']:checked"), function () {
+                members.push($(this).val());
+            });
+
+            let memberId = members.reduce(function (acc, cur, i) {
+                acc[i] = cur;
+                return acc;
+            }, {});
+
+            teamService.createTeam(name, memberId)
+                .then(function () {
+                    notifications.success(`Team ${name}`, `created successfull`);
+                    ctx.redirect('#/teams');
+                }).catch(function (reason) {
+                let errMessage = JSON.parse(reason.responseText).description;
+                notifications.error(`Error:`, `${errMessage}`);
+            })
+        }
     }
     function renderRegister(ctx) {
         this.loadPartials({
@@ -605,7 +687,7 @@ let actionController = (()=>{
         });
     }
     function actionNewOrder(ctx) {
-        if(!auth.isAuthed){
+        if(!auth.isAuthed()){
             ctx.redirect('#/register');
         }
         let name = util.cleanForm(ctx.params.nameOfApp);
@@ -636,10 +718,10 @@ let actionController = (()=>{
 
     }
     function actionDeleteOrder(ctx) {
-        ctx.loggedIn = auth.isAuthed;
+        ctx.loggedIn = auth.isAuthed();
         ctx.username = localStorage.getItem('username');
         ctx.isAdmin = localStorage.getItem('role') === 'Admin';
-
+        //TODO:Delete my orders
         let orderId = ctx.params.id.substr(1);
         if(ctx.isAdmin === true) {
             appService.deleteOrder(orderId)
@@ -653,7 +735,7 @@ let actionController = (()=>{
             })
         }
         else{
-            if(ctx.loggedIn()) {
+            if(ctx.loggedIn) {
                 notifications.error(`No permissions:`, 'You are not Administrator!');
                 ctx.redirect('#/orders');
             }
@@ -690,6 +772,7 @@ let actionController = (()=>{
         renderRegister,
         renderProfile,
         renderEditProfile,
+        renderNewTeam,
 
         actionLogin,
         actionRegister,

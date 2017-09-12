@@ -1,0 +1,33 @@
+{{> header}}
+<section id="login">
+    <div id="newOrderDiv" class="login-wrap">
+        <div class="login-html new-order">
+            <div class="login-form">
+                <h1>New Team</h1>
+
+                <form id="newOrderForm" class="form-group">
+
+                    <div class="group">
+                        <label for="teamName" class="label">Team Name</label>
+                        <input id="teamName" name="teamName" type="text" class="form-control" data-type="text"
+                               maxlength="35" required>
+                    </div>
+
+                    <div class="group">
+                        <label for="teamMembers" class="label">Choose Members</label>
+                        {{#each teamMembers}}
+                            <input type="checkbox" class="teamMember" name="teamMember" value="{{_id}}">{{username}}<br>
+                        {{/each}}
+                    </div>
+
+                </form>
+                <div class="group">
+                    <input type="submit" id="newTeamBtn" class="button" value="Create Team">
+                </div>
+                <div class="hr"></div>
+
+            </div>
+        </div>
+    </div>
+</section>
+{{> footer}}
