@@ -1,0 +1,27 @@
+{{> header}}
+<section id="login">
+    <div id="newOrderDiv" class="login-wrap">
+        <div class="login-html new-order">
+            <div class="login-form">
+                <h1>Team Details:</h1>
+                <form>
+                    <div class="group">
+                        <label for="teamName" class="label">Team Name</label>
+                        <input id="teamName" name="teamName" type="text" class="form-control" data-type="text" value="{{teamName}}" disabled="disabled">
+                    </div>
+                    <div class="group">
+                        <label for="orderName" class="label">Develop the order</label>
+                        <input id="orderName" name="orderName" type="text" class="form-control" data-type="text" value="{{orderName}}" disabled="disabled">
+                    </div>
+                    <div class="group">
+                        <label for="members" class="label">Members</label>
+                        <textarea id="members" name="members" type="text" class="form-control" data-type="text" disabled="disabled">{{members}}</textarea>
+                    </div>
+
+                    <div class="hr"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{{> footer}}

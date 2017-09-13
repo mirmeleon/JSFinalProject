@@ -237,7 +237,7 @@ let actionController = (()=>{
                                     if(!shown){
                                         event.preventDefault();
                                         return;
-                                        shown = true;
+                                        //shown = true;
                                     };
 
 
@@ -469,9 +469,7 @@ let actionController = (()=>{
         ctx.isTeamMember = auth.getRole() === 'teamMember';
 
         teamService.loadAllUsers().then(function (allUsers) {
-            console.log(allUsers);
             ctx.allUsers = allUsers;
-
 
             ctx.loadPartials({
                 header: './templates/common/header.hbs',
@@ -505,19 +503,40 @@ let actionController = (()=>{
             }).then(function () {
                 this.partial('./templates/teams/teams.hbs')
             });
-
-            let firstTeamMember = teams[0].memberId[0];
-            remote.get('user', firstTeamMember, 'kinvey').then(function (userDetails) {
-                console.log(userDetails);
-            });
-
-            console.log(teams[0].orderId);
-            appService.loadOrderDetails(teams[0].orderId).then(function (orderDetails) {
-                console.log(orderDetails.name);
-            });
             teamId = teams[0]._id;
         });
 
+    }
+    function renderTeamDetails(ctx) {
+        let teamId = ctx.params.id.substr(1);
+        ctx.loggedIn = auth.isAuthed();
+        if(!ctx.loggedIn){
+            ctx.redirect('#/login');
+        }
+        ctx.username = localStorage.getItem('username');
+        ctx.isTeamMember = localStorage.getItem('role') === 'teamMember';
+        ctx.isAdmin = localStorage.getItem('role') === 'Admin';
+
+         teamService.loadTeamDetails(teamId).then(function (teamInfo) {
+            ctx.teamName = teamInfo.name;
+            let members = [];
+            for (let i = 0; i < Object.keys(teamInfo.memberId).length; i++) {
+                teamService.userDetails(teamInfo.memberId[i]).then(function (userDetails) {
+                    members.push(userDetails.username);
+                });
+            }
+            ctx.members = members;
+
+             appService.loadOrderDetails(teamInfo.orderId).then(function (orderDetails) {
+                ctx.orderName = orderDetails.name;
+                ctx.loadPartials({
+                    header: './templates/common/header.hbs',
+                    footer: './templates/common/footer.hbs'
+                }).then(function () {
+                    this.partial('./templates/teams/teamDetails.hbs')
+                });
+            });
+        })
     }
     function renderNewTeam(ctx) {
         ctx.loggedIn = auth.isAuthed();
@@ -718,6 +737,7 @@ let actionController = (()=>{
         let pageCount = util.cleanForm(ctx.params.pageCount);
         let publishedDate = new Date();
 
+        console.log(deadline);
         if(name === ""){
             notifications.warning("Name", "can't be empty!");
         } else if(pageCount <= 0){
@@ -793,6 +813,7 @@ let actionController = (()=>{
         renderEditProfile,
         renderNewTeam,
         renderRoles,
+        renderTeamDetails,
 
         actionLogin,
         actionRegister,

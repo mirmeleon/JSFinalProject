@@ -1,4 +1,7 @@
 let teamService = (() => {
+    function userDetails(userId) {
+        return remote.get('user',`${userId}`, 'Kinvey')
+    }
     function loadAllUsers() {
         return remote.get('user','', 'Kinvey')
     }
@@ -22,6 +25,7 @@ let teamService = (() => {
         return remote.post('appdata', 'teams', teamData, 'Kinvey');
     }
     return {
+        userDetails,
         loadAllUsers,
         loadTeamMembers,
         loadTeams,

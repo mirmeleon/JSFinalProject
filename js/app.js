@@ -44,6 +44,8 @@ $(() => {
         this.get('#/newTeam',actionController.renderNewTeam);
         //Roles
         this.get('#/roles', actionController.renderRoles);
+        //Team Details
+        this.get('#/teamDetails/:id', actionController.renderTeamDetails)
     });
 
     app.run();
