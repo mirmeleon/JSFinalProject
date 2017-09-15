@@ -194,7 +194,7 @@ let actionController = (()=>{
                         event.preventDefault();
                         $('#ordersList').text('');
                         currentPage++;
-                        console.log(ordersToView);
+                        
                         showList(getListPart(ordersToView,currentPage));
 
                         pageButtonOn();
@@ -202,7 +202,7 @@ let actionController = (()=>{
                     function priviousOrders() {
                         event.preventDefault();
                         $('#ordersList').text('')
-                        console.log(ordersToView)
+                      
                         currentPage--;
                         showList(getListPart(ordersToView,currentPage))
                         pageButtonOn();
