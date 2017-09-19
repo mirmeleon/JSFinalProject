@@ -26,7 +26,13 @@
     padding-top: 20px;
     padding-bottom: 5px;
 }
+.role-management{
+    max-width: 700px;
+}
 #newOrderDiv{
+    min-height: 20px;
+}
+#editOrderDiv{
     min-height: 20px;
 }
 #notLoggedIn{
@@ -36,7 +42,11 @@
     display: block;
     text-align: center;
 }
-select.form-control#appType, select.form-control#appStatus, select.form-control#assignedTeam, select#orderCriteria.form-control{
+select.form-control#appType,
+select.form-control#appStatus,
+select.form-control#assignedTeam,
+select.form-control#role,
+select#orderCriteria.form-control{
     height: calc(2.25rem + 8px);
 }
 #ordersHeader{

@@ -480,6 +480,66 @@ let actionController = (()=>{
         });
 
     }
+    function renderChangeRole(ctx) {
+        let userId = ctx.params.id.substr(1);
+        ctx.loggedIn = auth.isAuthed();
+        if (!ctx.loggedIn) {
+            ctx.redirect('#/login');
+        }
+        ctx.username = localStorage.getItem('username');
+        ctx.isAdmin = localStorage.getItem('role') === 'Admin';
+        ctx.isTeamMember = auth.getRole() === 'teamMember';
+
+        let userInfo;
+
+        remote.get('user', userId, 'kinvey')
+            .then(function (userDetails) {
+                ctx.memberName = userDetails.username;
+                ctx.role = userDetails.role;
+                ctx[ctx.role] = 'selected';
+                userInfo = userDetails;
+            })
+            .then(function () {
+                ctx.loadPartials({
+                    header: './templates/common/header.hbs',
+                    footer: './templates/common/footer.hbs'
+                }).then(function () {
+                    this.partial('./templates/roles/roleEdit.hbs')
+                        .then(function () {
+                            if (ctx.isInProduction === true) $('#orderDetails').hide();
+                            $('#editRole').click(actionChangeRole);
+                        })
+                });
+            })
+            .catch(function (reason) {
+                let errMessage = JSON.parse(reason.responseText).description;
+                notifications.error(`Error:`, `${errMessage}`);
+            });
+
+        function actionChangeRole() {
+            let data = {
+                username:userInfo.username,
+                role: $('#role').val(),
+                companyName: userInfo.companyName,
+                country: userInfo.country,
+                town: userInfo.town,
+                address: userInfo.address,
+                ddsNumber: userInfo.ddsNumber,
+                team: userInfo.team
+            };
+            //TODO: made admin change roles for all members, now can only change her role
+            remote.update('user', userId, data, 'Kinvey')
+                .then(function(data){
+                    notifications.success(`Role`, `edited successfull`);
+                    ctx.redirect("#/roles")
+                }).catch(function(reason){
+                let errMessage = JSON.parse(reason.responseText).description;
+                notifications.error(`Error:`, `${errMessage}`);
+                ctx.redirect("#/roles")
+            })
+
+        }
+    }
     function renderTeams(ctx) {
         ctx.loggedIn = auth.isAuthed();
         if(!ctx.loggedIn){
@@ -827,6 +887,7 @@ let actionController = (()=>{
         renderNewTeam,
         renderRoles,
         renderTeamDetails,
+        renderChangeRole,
 
         actionLogin,
         actionRegister,

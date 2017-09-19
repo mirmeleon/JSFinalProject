@@ -1,0 +1,36 @@
+{{> header}}
+<section id="login">
+    <div class="section-content">
+        <h1 class="section-header">Change Role for member: <span class="content-header wow fadeIn " data-wow-delay="0.2s"
+                                              data-wow-duration="2s"> {{memberName}}</span></h1>
+    </div>
+    <div id="editOrderDiv" class="login-wrap">
+        <div class="login-html new-order">
+            <div class="login-form">
+                <form id="editOrderForm" class="form-group">
+                    <div class="group">
+                        <label for="role" class="label">Role</label>
+                        <select id="role" name="role" type="text" class="form-control dropdown-toggle"
+                                placeholder="App Status">
+                            <option value="" selected disabled hidden>No Role...</option>
+                            {{#if Admin}}
+                                <option selected="selected">Admin</option>  {{else}}
+                                <option>Admin</option>    {{/if}}
+                            {{#if teamMember}}
+                                <option selected="selected">teamMember</option>  {{else}}
+                                <option>teamMember</option>    {{/if}}
+                            {{#if user}}
+                                <option selected="selected">user</option>  {{else}}
+                                <option>user</option>  {{/if}}
+                        </select>
+                    </div>
+                </form>
+                <div class="group">
+                    <input type="submit" id="editRole" class="button" value="Save Changes">
+                </div>
+                <div class="hr"></div>
+            </div>
+        </div>
+    </div>
+</section>
+{{> footer}}

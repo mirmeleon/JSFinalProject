@@ -1,12 +1,15 @@
 {{> header}}
 <section id="login">
-    <div id="newOrderDiv" class="login-wrap">
+    <div id="newOrderDiv" class="login-wrap role-management">
         <div class="login-html new-order">
             <div class="login-form">
                 <h1>Roles Management</h1>
                 <div class="form-group">
                     {{#each allUsers}}
-                    For user: <label class="text-info">{{username}}</label> role is <span class="text-info">{{role}}</span><br>
+                        <div class="form-group">
+                            <span class="-align-left">For user: <label class="text-info font-weight-bold">{{username}}</label></span>
+                            role is <span class="text-info -align-right"><a href="#/changeRole/:{{_id}}" class="btn btn-info btn-xs">{{role}}</a></span><br>
+                        </div>
                     {{/each}}
                 </div>
             </div>
