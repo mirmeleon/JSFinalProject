@@ -489,10 +489,6 @@ let actionController = (()=>{
         ctx.isAdmin = localStorage.getItem('role') === 'Admin';
         ctx.isTeamMember = auth.getRole() === 'teamMember';
 
-        //teamService.loadAllUsers().then(function (usersInfo) {
-            //load only teamMembers
-        //    console.log(usersInfo.filter(usersInfo => usersInfo.role === 'teamMember'));
-        //});
         teamService.loadTeams().then(function (teams) {
 
             ctx.teams=teams;
@@ -509,6 +505,7 @@ let actionController = (()=>{
     }
     function renderTeamDetails(ctx) {
         let teamId = ctx.params.id.substr(1);
+        let teamInfoData;
         ctx.loggedIn = auth.isAuthed();
         if(!ctx.loggedIn){
             ctx.redirect('#/login');
@@ -517,26 +514,43 @@ let actionController = (()=>{
         ctx.isTeamMember = localStorage.getItem('role') === 'teamMember';
         ctx.isAdmin = localStorage.getItem('role') === 'Admin';
 
-         teamService.loadTeamDetails(teamId).then(function (teamInfo) {
-            ctx.teamName = teamInfo.name;
-            let members = [];
-            for (let i = 0; i < Object.keys(teamInfo.memberId).length; i++) {
-                teamService.userDetails(teamInfo.memberId[i]).then(function (userDetails) {
-                    members.push(userDetails.username);
-                });
-            }
-            ctx.members = members;
-
-             appService.loadOrderDetails(teamInfo.orderId).then(function (orderDetails) {
-                ctx.orderName = orderDetails.name;
-                ctx.loadPartials({
-                    header: './templates/common/header.hbs',
-                    footer: './templates/common/footer.hbs'
-                }).then(function () {
-                    this.partial('./templates/teams/teamDetails.hbs')
-                });
-            });
-        })
+        teamService.loadTeamDetails(teamId)
+            .then(function (teamInfo) {
+                teamInfoData = teamInfo;
+                ctx.teamName = teamInfo.name;
+            })
+            .then(function () {
+                let members = [];
+                for (let i = 0; i < Object.keys(teamInfoData.memberId).length; i++) {
+                    teamService.userDetails(teamInfoData.memberId[i])
+                        .then(function (userDetails) {
+                            members.push(userDetails.username);
+                        });
+                }
+                ctx.members = members;
+            })
+            .then(function () {
+                appService.loadOrderDetails(teamInfoData.orderId)
+                    .then(function (orderDetails) {
+                        ctx.orderName = orderDetails.name;
+                    })
+                    .then(function () {
+                        ctx.loadPartials({
+                            header: './templates/common/header.hbs',
+                            footer: './templates/common/footer.hbs'
+                        }).then(function () {
+                            this.partial('./templates/teams/teamDetails.hbs')
+                        });
+                    })
+                    .catch(function () {
+                        ctx.loadPartials({
+                            header: './templates/common/header.hbs',
+                            footer: './templates/common/footer.hbs'
+                        }).then(function () {
+                            this.partial('./templates/teams/teamDetails.hbs')
+                        });
+                    })
+            })
     }
     function renderNewTeam(ctx) {
         ctx.loggedIn = auth.isAuthed();
@@ -548,7 +562,6 @@ let actionController = (()=>{
         ctx.isTeamMember = auth.getRole() === 'teamMember';
         teamService.loadTeamMembers()
             .then(function (teamMembersDetails) {
-            console.log(teamMembersDetails);
             let allTeamMembers = [];
             for (let i = 0; i < teamMembersDetails.length; i++) {
                 allTeamMembers.push(teamMembersDetails[i].username);
